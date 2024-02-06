@@ -1,7 +1,6 @@
 package com.tool.RecruitXpert.Entities;
 
 import com.tool.RecruitXpert.Enums.ActivateRecruiter;
-import com.tool.RecruitXpert.Enums.Role;
 import com.tool.RecruitXpert.Enums.Status;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -19,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Table
 public class Recruiter {
 
     @Id
@@ -38,7 +38,8 @@ public class Recruiter {
 
     String jobRole;
 
-    String recruiterPermission; // inter
+    String recruiterPermission; // approve | comment | reviewer
+
 
     @Enumerated(value = EnumType.STRING)
     Status recruiterStatus; // approved | dis-approve = cannot access |
@@ -47,8 +48,9 @@ public class Recruiter {
     @Enumerated(value = EnumType.STRING)
     ActivateRecruiter activateRecruiter; // active | de-active
 
-    @Enumerated(EnumType.STRING)
-    Role role;
+    // mapped for user to recruiter
+    @OneToMany(mappedBy = "recruiter", cascade = CascadeType.ALL)
+    private List<User> userList = new ArrayList<>();
 
 
 }

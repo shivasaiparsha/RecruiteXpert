@@ -1,6 +1,5 @@
 package com.tool.RecruitXpert.Entities;
 
-import com.tool.RecruitXpert.Enums.Role;
 import com.tool.RecruitXpert.Enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Table
 
 public class User {
     // this user show's the user login part
@@ -52,14 +52,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Status status; // approved | denied | deactivate
 
-    Role userRole;
-
     // this is recruiter - review - resume feature :
 
-    boolean isReviewed; // if this is true then show on recruiter's portal like this person selected.
-//  then if it's reviewed then get the details of that recruiter id
 
-    // for that we've to do many-many [hwo to map]
+    boolean isReviewed; // if this is true then show on recruiter's portal like this person selected.
+    //  then if it's reviewed then get the details of that recruiter id
+
+
+    // map for user to recruiter
+    @ManyToOne
+    @JoinColumn
+    private Recruiter recruiter;
 
     @OneToMany(mappedBy = "userToResume", cascade = CascadeType.ALL)
     private List<ResumeEntity> resumeList = new ArrayList<>();

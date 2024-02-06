@@ -12,8 +12,11 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Table
 public class ResumeEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int resumeId;
 
     @CreationTimestamp
@@ -29,7 +32,6 @@ public class ResumeEntity {
     // condition : resume should be upload less than 4 times total.
     @Lob  @Column(nullable = false)
     byte[] resume;
-
 
     @ManyToOne
     @JoinColumn

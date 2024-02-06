@@ -1,6 +1,5 @@
 package com.tool.RecruitXpert.Entities;
 
-import com.tool.RecruitXpert.Enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,7 +14,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Data @Table
 public class Admin {
 
     // HERE ADMIN HAS ACCESS TO USERS SO DON'T WANT TO HAVE MAPPINGS HERE
@@ -28,14 +27,12 @@ public class Admin {
     String lastname;
 
     @Column(unique = true, nullable = false)
-    String user_name;
+    String email;
 
     String password;
 
     // we've to check if this is admin-role
     // then only we'll provide all the admin access
-    @Enumerated(EnumType.STRING)
-    Role adminrole;
 
     String website;
     String adminImg;
@@ -49,11 +46,11 @@ public class Admin {
     Date lastActive;
 
     String address;
+
     String location;
 
-
+    // admin has job list
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
     private List<Jobs> jobsList = new ArrayList<>();
-
 
 }

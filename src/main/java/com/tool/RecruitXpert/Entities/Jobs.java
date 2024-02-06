@@ -10,9 +10,7 @@ import java.util.List;
 @FieldDefaults(level= AccessLevel.PRIVATE)
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
+@AllArgsConstructor @Data @Table
 public class Jobs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +24,8 @@ public class Jobs {
 
     double experience;
 
-    Long ctc_salary;
+//    7LPA
+    String ctc_salary;
 
     String location;
 

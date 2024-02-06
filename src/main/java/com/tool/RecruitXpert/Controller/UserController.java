@@ -7,7 +7,7 @@ public class UserController {
 
     // delete user by id
 
-    // update user account status by id
+    //create DTO : update user account status by id
 
     // during saving the resume we've to create DTO and also filled those fields from transaction
 }
