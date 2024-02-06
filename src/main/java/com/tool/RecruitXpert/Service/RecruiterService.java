@@ -1,4 +1,4 @@
 package com.tool.RecruitXpert.Service;
 
-public interface RecruiterService {
+public class RecruiterService {
 }

@@ -1,4 +1,6 @@
 package com.tool.RecruitXpert.Service;
 
-public interface AdminService {
+
+public class AdminService {
+
 }

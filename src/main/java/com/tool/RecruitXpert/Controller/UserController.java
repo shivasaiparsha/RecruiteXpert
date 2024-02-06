@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
 
+    // create user using dto -
+
     // delete user by id
 
     //create DTO : update user account status by id

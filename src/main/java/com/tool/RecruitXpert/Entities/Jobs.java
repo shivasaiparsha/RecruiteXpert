@@ -3,8 +3,11 @@ package com.tool.RecruitXpert.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @FieldDefaults(level= AccessLevel.PRIVATE)
@@ -14,24 +17,25 @@ import java.util.List;
 public class Jobs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long jobId;
+    Long jobid;
 
-    String jobRole; // web dev | ml | java dev
+    String jobrole; // web dev | ml | java dev
 
-    String newJobRole; // whenever recruiter inserts new role
+    String newjobrole; // whenever recruiter inserts new role
 
-    String job_description;
+    String jobdescription;
 
     double experience;
 
 //    7LPA
-    String ctc_salary;
+    String ctc;
 
     String location;
 
     int vacancies;
 
-    LocalDate last_date;
+    @CreationTimestamp
+    Date lastDate;
 
    // one recruiter many jobs
     @ManyToOne
@@ -40,5 +44,5 @@ public class Jobs {
 
     // one user many jobs
     @ManyToOne @JoinColumn
-    private User userJobs;
+    private User userjobs;
 }

@@ -58,7 +58,6 @@ public class User {
     boolean isReviewed; // if this is true then show on recruiter's portal like this person selected.
     //  then if it's reviewed then get the details of that recruiter id
 
-
     // map for user to recruiter
     @ManyToOne
     @JoinColumn
@@ -68,6 +67,6 @@ public class User {
     private List<ResumeEntity> resumeList = new ArrayList<>();
 
     // one user - many jobs
-    @OneToMany(mappedBy = "userJobs", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userjobs", cascade = CascadeType.ALL)
     private List<Jobs> jobsList = new ArrayList<>();
 }
