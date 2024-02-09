@@ -5,7 +5,9 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @FieldDefaults(level= AccessLevel.PRIVATE)
 @Entity
@@ -37,10 +39,9 @@ public class JobsApplication {
    // many to many to user - jobs application
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "")
+    @JoinTable(name = "user_jobs",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    List<User> usersApplied = new ArrayList<>();
 
-
-    // one user many jobs
-    @ManyToOne @JoinColumn
-    private User userjobs;
 }

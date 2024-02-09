@@ -50,7 +50,7 @@ public class User {
 
     // this field is only access by admin cause we're passing this para to dtos so user can't able to access it
     @Enumerated(EnumType.STRING)
-    private Status status; // approved | denied | deactivate
+     Status status; // approved | denied | deactivate
 
     // this is recruiter - review - resume feature :
 
@@ -61,12 +61,12 @@ public class User {
     // map for user to recruiter
     @ManyToOne
     @JoinColumn
-    private Recruiter recruiter;
+     Recruiter recruiter;
 
     @OneToMany(mappedBy = "userToResume", cascade = CascadeType.ALL)
-    private List<ResumeEntity> resumeList = new ArrayList<>();
+     List<ResumeEntity> resumeList = new ArrayList<>();
 
     // one user - many jobs
-    @OneToMany(mappedBy = "userjobs", cascade = CascadeType.ALL)
-    private List<JobsApplication> jobsApplicationList = new ArrayList<>();
+    @ManyToMany(mappedBy = "usersApplied")
+     List<JobsApplication> jobsApplicationList = new ArrayList<>();
 }
