@@ -1,5 +1,6 @@
 package com.tool.RecruitXpert.Entities;
 
+import com.tool.RecruitXpert.Enums.RecruiterPermission;
 import com.tool.RecruitXpert.Enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Table
-
+@Builder
 public class User {
     // this user show's the user login part
     // make sure to do @Column(nullable = false) for all field
@@ -26,6 +27,8 @@ public class User {
     int userId;
 
     String firstName;
+
+    String lastName;
 
     String mobileNo;
 
@@ -37,7 +40,7 @@ public class User {
     int experienceInYears;
     int relevantExp;
     String highestQualification;
-    ArrayList<String> skillset;
+    String  skillSet;
     String currentOrg;
     String currentJobTitle;
     String location;
@@ -53,7 +56,7 @@ public class User {
     private Status status; // approved | denied | deactivate
 
     // this is recruiter - review - resume feature :
-
+    RecruiterPermission userPermission; // approve | comment | reviewer
 
     boolean isReviewed; // if this is true then show on recruiter's portal like this person selected.
     //  then if it's reviewed then get the details of that recruiter id

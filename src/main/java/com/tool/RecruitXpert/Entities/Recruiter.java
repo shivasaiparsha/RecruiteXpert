@@ -1,6 +1,7 @@
 package com.tool.RecruitXpert.Entities;
 
 import com.tool.RecruitXpert.Enums.ActivateRecruiter;
+import com.tool.RecruitXpert.Enums.RecruiterPermission;
 import com.tool.RecruitXpert.Enums.Status;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -38,7 +39,7 @@ public class Recruiter {
 
     String jobRole;
 
-    String recruiterPermission; // approve | comment | reviewer
+
 
 
     @Enumerated(value = EnumType.STRING)

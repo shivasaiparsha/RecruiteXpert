@@ -34,6 +34,7 @@ public class Jobs {
 
     int vacancies;
 
+
     @CreationTimestamp
     Date lastDate;
 
