@@ -2,7 +2,6 @@ package com.tool.RecruitXpert.Transformer;
 
 import com.tool.RecruitXpert.DTO.AdminDTO.AdminRequest;
 import com.tool.RecruitXpert.DTO.AdminDTO.AdminResponse;
-import com.tool.RecruitXpert.Entities.Admin;
 
 public class AdminTransformer {
 

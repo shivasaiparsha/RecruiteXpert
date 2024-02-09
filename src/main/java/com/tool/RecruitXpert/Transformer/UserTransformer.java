@@ -2,7 +2,6 @@ package com.tool.RecruitXpert.Transformer;
 
 import com.tool.RecruitXpert.DTO.UserDTO.UserRequest;
 import com.tool.RecruitXpert.DTO.UserDTO.UserResponse;
-import com.tool.RecruitXpert.Entities.User;
 
 public class UserTransformer {
 

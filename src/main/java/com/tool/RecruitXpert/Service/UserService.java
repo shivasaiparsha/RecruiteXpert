@@ -1,12 +1,8 @@
 package com.tool.RecruitXpert.Service;
 
-import com.tool.RecruitXpert.DTO.AdminDTO.AdminResponse;
 import com.tool.RecruitXpert.DTO.UserDTO.UpdateUserStatus;
 import com.tool.RecruitXpert.DTO.UserDTO.UserRequest;
 import com.tool.RecruitXpert.DTO.UserDTO.UserResponse;
-import com.tool.RecruitXpert.Entities.Admin;
-import com.tool.RecruitXpert.Entities.User;
-import com.tool.RecruitXpert.Exceptions.AdminNotFoundException;
 import com.tool.RecruitXpert.Exceptions.UserNotFoundException;
 import com.tool.RecruitXpert.Repository.UserRepository;
 import com.tool.RecruitXpert.Transformer.UserTransformer;

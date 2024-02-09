@@ -3,7 +3,6 @@ package com.tool.RecruitXpert.Service;
 
 import com.tool.RecruitXpert.DTO.AdminDTO.AdminRequest;
 import com.tool.RecruitXpert.DTO.AdminDTO.AdminResponse;
-import com.tool.RecruitXpert.Entities.Admin;
 import com.tool.RecruitXpert.Exceptions.AdminNotFoundException;
 import com.tool.RecruitXpert.Repository.AdminRepository;
 import com.tool.RecruitXpert.Transformer.AdminTransformer;
