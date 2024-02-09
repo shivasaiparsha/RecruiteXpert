@@ -36,7 +36,7 @@ public class JobsApplication {
     @CreationTimestamp
     Date lastDate;
 
-   // many to many to user - jobs application
+   // many-to-many to user - jobs application
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_jobs",

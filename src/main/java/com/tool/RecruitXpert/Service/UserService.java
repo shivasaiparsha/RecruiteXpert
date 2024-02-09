@@ -3,6 +3,7 @@ package com.tool.RecruitXpert.Service;
 import com.tool.RecruitXpert.DTO.UserDTO.UpdateUserStatus;
 import com.tool.RecruitXpert.DTO.UserDTO.UserRequest;
 import com.tool.RecruitXpert.DTO.UserDTO.UserResponse;
+import com.tool.RecruitXpert.Entities.User;
 import com.tool.RecruitXpert.Exceptions.UserNotFoundException;
 import com.tool.RecruitXpert.Repository.UserRepository;
 import com.tool.RecruitXpert.Transformer.UserTransformer;
@@ -23,7 +24,7 @@ public class UserService {
 
     public String deleteUser(Long id) {
             Optional<User> optionalUser = userRepository.findById(id);
-            if(optionalUser.isPresent()==false){
+            if(!optionalUser.isPresent()){
                 throw new UserNotFoundException("User not Found");
             }
             userRepository.deleteById(id);
@@ -32,7 +33,7 @@ public class UserService {
 
     public String updateUserStatus(UpdateUserStatus updateUserStatus) {
         Optional<User> optionalUser = userRepository.findById(updateUserStatus.getId());
-        if(optionalUser.isPresent()==false){
+        if(!optionalUser.isPresent()){
             throw new UserNotFoundException("User not Found");
         }
            User user = new User();

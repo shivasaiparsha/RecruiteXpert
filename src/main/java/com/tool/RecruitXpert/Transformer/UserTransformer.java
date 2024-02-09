@@ -2,6 +2,7 @@ package com.tool.RecruitXpert.Transformer;
 
 import com.tool.RecruitXpert.DTO.UserDTO.UserRequest;
 import com.tool.RecruitXpert.DTO.UserDTO.UserResponse;
+import com.tool.RecruitXpert.Entities.User;
 
 public class UserTransformer {
 
@@ -19,7 +20,7 @@ public class UserTransformer {
                 .city(userRequest.getCity())
                 .mobileNo(userRequest.getMobileNo())
                 .currentOrg(userRequest.getCurrentOrg())
-                .skillSet(userRequest.getSkillSet())
+                .skillset(userRequest.getSkillSet())
                 .zipCode(userRequest.getZipCode())
                 .build();
     }

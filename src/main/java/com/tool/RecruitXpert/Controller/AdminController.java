@@ -15,8 +15,8 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    // addAdmin
-    @PostMapping("/add")
+    // addAdmin new admin
+    @PostMapping("/register")
     public ResponseEntity addAdmin(@RequestBody AdminRequest adminRequest) {
         AdminResponse adminResponse = adminService.addAdmin(adminRequest);
         return new ResponseEntity(adminResponse, HttpStatus.CREATED);

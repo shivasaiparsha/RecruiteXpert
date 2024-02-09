@@ -44,13 +44,18 @@ public class Recruiter {
     @Enumerated(value = EnumType.STRING)
     Status recruiterStatus; // approved | dis-approve = cannot access |
 
+
+    List<Integer> userList = new ArrayList<>();
+
+
     // this comes under manage part
     @Enumerated(value = EnumType.STRING)
     ActivateRecruiter activateRecruiter; // active | de-active
 
-    // mapped for user to recruiter
-    @OneToMany(mappedBy = "recruiter", cascade = CascadeType.ALL)
-    private List<User> userList = new ArrayList<>();
+
+//    // mapped for user to recruiter
+//    @OneToMany(mappedBy = "recruiter", cascade = CascadeType.ALL)
+//    private List<User> userList = new ArrayList<>();
 
 
     public Recruiter(String firstname, String lastname, String email, String password, String jobRole) {
