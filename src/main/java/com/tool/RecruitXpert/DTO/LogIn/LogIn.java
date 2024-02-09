@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-public class UserLogIn {
-    String userName;
+public class LogIn {
+    String email;
     String password;
 }

@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Table
-
+@Builder
 public class User {
     // this user show's the user login part
     // make sure to do @Column(nullable = false) for all field
@@ -26,7 +26,7 @@ public class User {
     int userId;
 
     String firstName;
-
+    String lastName;
     String mobileNo;
 
     @Column(unique = true, nullable = false)
@@ -37,7 +37,9 @@ public class User {
     int experienceInYears;
     int relevantExp;
     String highestQualification;
-    ArrayList<String> skillset;
+
+    String skillset;
+
     String currentOrg;
     String currentJobTitle;
     String location;
@@ -48,7 +50,7 @@ public class User {
     @UpdateTimestamp    
     Date lastActiveDate;
 
-    // this field is only access by admin cause we're passing this para to dtos so user can't able to access it
+//    // this field is only access by admin cause we're passing this para to dtos so user can't able to access it
     @Enumerated(EnumType.STRING)
      Status status; // approved | denied | deactivate
 
@@ -58,10 +60,12 @@ public class User {
     boolean isReviewed; // if this is true then show on recruiter's portal like this person selected.
     //  then if it's reviewed then get the details of that recruiter id
 
-    // map for user to recruiter
-    @ManyToOne
-    @JoinColumn
-     Recruiter recruiter;
+    List<Integer> recruiterList = new ArrayList<>();
+
+//    // map for user to recruiter
+//    @ManyToOne
+//    @JoinColumn
+//     Recruiter recruiter;
 
     @OneToMany(mappedBy = "userToResume", cascade = CascadeType.ALL)
      List<ResumeEntity> resumeList = new ArrayList<>();

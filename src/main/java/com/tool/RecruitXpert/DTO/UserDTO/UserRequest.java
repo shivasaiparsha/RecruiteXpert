@@ -29,7 +29,7 @@ public class UserRequest {
 
     String highestQualification;
 
-    String  skillSet;
+    String skillSet;
 
     String currentOrg;
 

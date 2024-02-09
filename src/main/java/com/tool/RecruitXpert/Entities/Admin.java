@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data @Table
+@Builder
 public class Admin {
 
     // HERE ADMIN HAS ACCESS TO USERS SO DON'T WANT TO HAVE MAPPINGS HERE
@@ -35,8 +36,11 @@ public class Admin {
     // then only we'll provide all the admin access
 
     String website;
+
     String adminImg;
+
     String companyName;
+
     String adminRole;
 
     @CreationTimestamp
