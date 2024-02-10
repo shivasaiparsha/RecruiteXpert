@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class UpdateUserStatus {
 
-    Long id;
+    int id;
     Status status;
 
 }
