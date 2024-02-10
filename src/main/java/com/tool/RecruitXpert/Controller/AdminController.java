@@ -26,6 +26,7 @@ public class AdminController {
 
     // update
     //  ADMIN CAN UPDATE THE JOB ROLE AND DESCRIPTION
+
     @PutMapping("/update")
     public ResponseEntity updateAdmin(@RequestBody UpdateAdminDTO adminRequest) {
         String message = adminService.updateAdmin(adminRequest);

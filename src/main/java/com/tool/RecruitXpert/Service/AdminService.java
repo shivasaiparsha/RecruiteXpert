@@ -8,6 +8,7 @@ import com.tool.RecruitXpert.Entities.Admin;
 import com.tool.RecruitXpert.Exceptions.AdminNotFoundException;
 import com.tool.RecruitXpert.Repository.AdminRepository;
 import com.tool.RecruitXpert.Transformer.AdminTransformer;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +17,16 @@ import java.util.Optional;
 public class AdminService {
     @Autowired
     private AdminRepository adminRepository;
+    @Autowired
+    ModelMapper modelMapper;
     public AdminResponse addAdmin(AdminRequest adminRequest) {
 
         Admin admin = AdminTransformer.AdminRequestToAdmin(adminRequest);
         Admin savedAdmin = adminRepository.save(admin);
-        return AdminTransformer.AdminToAdminResponse(savedAdmin);
+//        return AdminTransformer.AdminToAdminResponse(savedAdmin);
+        return modelMapper.map(adminRequest,AdminResponse.class);
     }
+
 
     public String updateAdmin(UpdateAdminDTO adminRequest) {
 
@@ -40,6 +45,7 @@ public class AdminService {
 
         adminRepository.save(admin);
         return "Successfully Updated !";
+ 
     }
 
     public String deleteAdmin(Long id) {
