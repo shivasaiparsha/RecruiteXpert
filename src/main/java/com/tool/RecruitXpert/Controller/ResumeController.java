@@ -36,7 +36,8 @@ public class ResumeController {
 
     // upload resume by specific user
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadResume(@RequestParam("image") MultipartFile file, @RequestParam("userid") Integer userid) throws IOException {
+    public ResponseEntity<String> uploadResume(@RequestParam("image") MultipartFile file,
+                                               @RequestParam("userid") Integer userid) throws IOException {
         try {
             String uploadResume = resumeService.saveResumeToDb(file, userid);
             return ResponseEntity.status(HttpStatus.OK)
