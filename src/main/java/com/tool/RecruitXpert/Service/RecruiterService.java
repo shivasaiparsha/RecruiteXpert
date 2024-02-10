@@ -1,13 +1,16 @@
 package com.tool.RecruitXpert.Service;
 
 import com.tool.RecruitXpert.DTO.RecruiterDto.AddRecruiterDto;
+import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterHomepageResponseDTO;
 import com.tool.RecruitXpert.DTO.RecruiterDto.UpdateRecruiterDto;
+import com.tool.RecruitXpert.Entities.Admin;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Repository.RecruiterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.sql.Date;
+import java.util.Arrays;
 import java.util.Optional;
 
 @Service
@@ -55,6 +58,23 @@ public class RecruiterService {
         repository.deleteById(recruiter.getId());
 
         return "Recruiter Deleted Successfully";
+    }
+
+    public RecruiterHomepageResponseDTO recruiterDashboard(int id) {
+          Recruiter recruiter = repository.findById(id).get();
+          Admin admin = recruiter.getAdmin();
+        RecruiterHomepageResponseDTO recruiterHomepageResponseDTO = new RecruiterHomepageResponseDTO();
+
+        recruiterHomepageResponseDTO.setRecruiterImg(recruiter.getRecruiterImg());
+        recruiterHomepageResponseDTO.setRecruiterDate((Date) recruiter.getCreatedDate());
+        recruiterHomepageResponseDTO.setRecruiterLocation(recruiter.getLocation());
+        recruiterHomepageResponseDTO.setRecruiterName(recruiter.getFirstname());
+        recruiterHomepageResponseDTO.setRecruiterRole(recruiter.getJobRole());
+        recruiterHomepageResponseDTO.setAdminDate((Date) admin.getCreatedDate());
+        recruiterHomepageResponseDTO.setAdminImg(admin.getAdminImg());
+        recruiterHomepageResponseDTO.setAdminName(admin.getFirstname());
+        recruiterHomepageResponseDTO.setAdminRole(admin.getAdminRole());
+        return  recruiterHomepageResponseDTO;
     }
 
 

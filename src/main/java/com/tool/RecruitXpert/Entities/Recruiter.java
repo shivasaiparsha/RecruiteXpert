@@ -8,12 +8,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
-@FieldDefaults(level= AccessLevel.PACKAGE)
+@FieldDefaults(level= AccessLevel.PRIVATE)
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,6 +43,13 @@ public class Recruiter {
 
     String recruiterPermission; // approve | comment | reviewer
 
+    @CreationTimestamp
+    Date createdDate;
+
+    @UpdateTimestamp
+    Date lastActive;
+
+    String location;
 
     @Enumerated(value = EnumType.STRING)
     Status recruiterStatus; // approved | dis-approve = cannot access |
@@ -55,6 +65,9 @@ public class Recruiter {
 //    @OneToMany(mappedBy = "recruiter", cascade = CascadeType.ALL)
 //    private List<User> userList = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn
+    Admin admin;
 
     public Recruiter(String firstname, String lastname, String email, String password, String jobRole) {
         this.firstname = firstname;

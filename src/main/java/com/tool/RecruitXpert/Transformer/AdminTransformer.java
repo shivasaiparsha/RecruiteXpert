@@ -1,23 +1,24 @@
 package com.tool.RecruitXpert.Transformer;
 
-import com.tool.RecruitXpert.DTO.AdminDTO.AdminRequest;
+import com.tool.RecruitXpert.DTO.AdminDTO.FormAdminDTO;
 import com.tool.RecruitXpert.DTO.AdminDTO.AdminResponse;
 import com.tool.RecruitXpert.Entities.Admin;
 
+import java.io.IOException;
+
 public class AdminTransformer {
 
-    public static Admin AdminRequestToAdmin(AdminRequest adminRequest){
+    public static Admin AdminRequestToAdmin(FormAdminDTO formAdminDTO) throws IOException {
         return Admin.builder()
-                .firstname(adminRequest.getFirstname())
-                .lastname(adminRequest.getLastname())
-                .email(adminRequest.getEmail())
-                .password(adminRequest.getPassword())
-                .adminRole(adminRequest.getRole())
-                .adminImg(adminRequest.getAdminImg())
-                .address(adminRequest.getAddress())
-                .location(adminRequest.getLocation())
-                .companyName(adminRequest.getCompanyName())
-                .website(adminRequest.getWebsite())
+                .firstname(formAdminDTO.getFirstname())
+                .lastname(formAdminDTO.getLastname())
+                .adminRole(formAdminDTO.getRole())
+                .adminImg(formAdminDTO.getAdminImg())
+                .address(formAdminDTO.getAddress())
+                .location(formAdminDTO.getLocation())
+                .companyName(formAdminDTO.getCompanyName())
+                .website(formAdminDTO.getWebsite())
+                .adminRole((formAdminDTO.getRole()))
                 .build();
     }
 

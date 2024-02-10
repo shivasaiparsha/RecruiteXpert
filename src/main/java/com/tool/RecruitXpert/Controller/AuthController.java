@@ -1,8 +1,5 @@
 package com.tool.RecruitXpert.Controller;
 
-import com.tool.RecruitXpert.DTO.AdminDTO.AdminRequest;
-import com.tool.RecruitXpert.DTO.LogIn.LogIn;
-import com.tool.RecruitXpert.Entities.Admin;
 import com.tool.RecruitXpert.Repository.AdminRepository;
 import com.tool.RecruitXpert.Repository.RecruiterRepository;
 import com.tool.RecruitXpert.Repository.UserRepository;

@@ -1,6 +1,7 @@
 package com.tool.RecruitXpert.Controller;
 
 import com.tool.RecruitXpert.DTO.RecruiterDto.AddRecruiterDto;
+import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterHomepageResponseDTO;
 import com.tool.RecruitXpert.DTO.RecruiterDto.UpdateRecruiterDto;
 import com.tool.RecruitXpert.Service.RecruiterService;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,14 @@ public class RecruiterController {
             log.error(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/dashboard/{id}")
+    public ResponseEntity recruiterDashboard(@PathVariable int id){
+        RecruiterHomepageResponseDTO recruiterHomepageResponseDTO = service.recruiterDashboard(id);
+        return new ResponseEntity<>(recruiterHomepageResponseDTO,HttpStatus.ACCEPTED);
+
+
     }
 
 }

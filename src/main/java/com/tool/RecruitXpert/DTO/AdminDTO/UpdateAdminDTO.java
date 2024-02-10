@@ -2,6 +2,7 @@ package com.tool.RecruitXpert.DTO.AdminDTO;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
@@ -19,6 +20,8 @@ public class UpdateAdminDTO {
     String address;
 
     String website;
+
+    //MultipartFile adminImg;
 
     String adminImg;
 
