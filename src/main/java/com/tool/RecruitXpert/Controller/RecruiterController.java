@@ -1,7 +1,7 @@
 package com.tool.RecruitXpert.Controller;
 
-import com.tool.RecruitXpert.DTO.AddRecruiterDto;
-import com.tool.RecruitXpert.DTO.UpdateRecruiterDto;
+import com.tool.RecruitXpert.DTO.RecruiterDto.AddRecruiterDto;
+import com.tool.RecruitXpert.DTO.RecruiterDto.UpdateRecruiterDto;
 import com.tool.RecruitXpert.Service.RecruiterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class RecruiterController {
 
     // just getting id from UI side
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> addRecruiter(@RequestParam("id") int id) {
+    public ResponseEntity<?> addRecruiter(@PathVariable("id") int id) {
         try {
             String response = service.deleteById(id);
             return new ResponseEntity<>(response, HttpStatus.ACCEPTED);

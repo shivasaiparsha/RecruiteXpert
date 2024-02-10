@@ -2,6 +2,7 @@ package com.tool.RecruitXpert.Controller;
 
 import com.tool.RecruitXpert.DTO.AdminDTO.AdminRequest;
 import com.tool.RecruitXpert.DTO.AdminDTO.AdminResponse;
+import com.tool.RecruitXpert.DTO.AdminDTO.UpdateAdminDTO;
 import com.tool.RecruitXpert.Service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class AdminController {
     // update
     //  ADMIN CAN UPDATE THE JOB ROLE AND DESCRIPTION
     @PutMapping("/update")
-    public ResponseEntity updateAdmin(@RequestBody AdminRequest adminRequest) {
+    public ResponseEntity updateAdmin(@RequestBody UpdateAdminDTO adminRequest) {
         String message = adminService.updateAdmin(adminRequest);
         return new ResponseEntity(message, HttpStatus.ACCEPTED);
     }

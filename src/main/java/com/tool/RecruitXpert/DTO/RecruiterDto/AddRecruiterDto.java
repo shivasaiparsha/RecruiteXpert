@@ -1,4 +1,4 @@
-package com.tool.RecruitXpert.DTO;
+package com.tool.RecruitXpert.DTO.RecruiterDto;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,9 +19,7 @@ public class AddRecruiterDto {
 
     String password;
 
-//    String recruiterImg;
-
-//    String recruiterPermission; // approve | comment | reviewer
+    String recruiterImg;
 
     String jobRole;
 
