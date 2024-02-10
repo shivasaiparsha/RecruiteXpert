@@ -10,17 +10,13 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 public class UpdateAdminDTO {
 
+    long adminId;
+
     String firstname;
 
     String lastname;
 
-    String email;
-
-    String password;
-
     String address;
-
-    String location;
 
     String website;
 
@@ -28,5 +24,4 @@ public class UpdateAdminDTO {
 
     String companyName;
 
-    String role;
 }

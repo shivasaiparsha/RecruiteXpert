@@ -1,7 +1,7 @@
 package com.tool.RecruitXpert.Service;
 
-import com.tool.RecruitXpert.DTO.AddRecruiterDto;
-import com.tool.RecruitXpert.DTO.UpdateRecruiterDto;
+import com.tool.RecruitXpert.DTO.RecruiterDto.AddRecruiterDto;
+import com.tool.RecruitXpert.DTO.RecruiterDto.UpdateRecruiterDto;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Repository.RecruiterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +32,9 @@ public class RecruiterService {
     // update itself
     public String updateRecruiter(UpdateRecruiterDto dto) throws Exception {
 
-        String email = repository.findByEmail(dto.getEmail());
         Optional<Recruiter> optional = repository.findById(dto.getId());
+        Recruiter recruiter = optional.get();
 
-        Recruiter checkEmail = optional.get();
-        String emailCheck = checkEmail.getEmail();
-        if (Objects.equals(emailCheck, email)) throw new Exception("Please Enter new Email.");
-
-        Recruiter recruiter = new Recruiter();
         recruiter.setFirstname(dto.getFirstname());
         recruiter.setLastname(dto.getLastname());
         recruiter.setEmail(dto.getEmail());

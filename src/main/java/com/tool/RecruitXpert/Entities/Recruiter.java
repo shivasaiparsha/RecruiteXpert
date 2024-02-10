@@ -44,11 +44,9 @@ public class Recruiter {
     @Enumerated(value = EnumType.STRING)
     Status recruiterStatus; // approved | dis-approve = cannot access |
 
+//    Question : figure out here how recruiter is getting list of approved users by recruiter
 
-    List<Integer> userList = new ArrayList<>();
 
-
-    // this comes under manage part
     @Enumerated(value = EnumType.STRING)
     ActivateRecruiter activateRecruiter; // active | de-active
 

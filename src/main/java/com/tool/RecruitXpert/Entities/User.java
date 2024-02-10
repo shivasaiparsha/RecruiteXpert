@@ -65,7 +65,10 @@ public class User {
 //    // map for user to recruiter
 //    @ManyToOne
 //    @JoinColumn
-//     Recruiter recruiter;
+//    Recruiter recruiter;
+
+    // versioning
+    int currentResumeVersion; // store current resume id and then return
 
     @OneToMany(mappedBy = "userToResume", cascade = CascadeType.ALL)
      List<ResumeEntity> resumeList = new ArrayList<>();

@@ -29,4 +29,5 @@ public class AdminRequest {
     String companyName;
 
     String role;
+
 }
