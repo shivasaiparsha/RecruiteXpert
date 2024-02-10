@@ -21,7 +21,7 @@ public class Admin {
     // HERE ADMIN HAS ACCESS TO USERS SO DON'T WANT TO HAVE MAPPINGS HERE
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long AdminId;
+    Long id;
 
     String firstname;
 
@@ -34,10 +34,15 @@ public class Admin {
 
     // we've to check if this is admin-role
     // then only we'll provide all the admin access
+    String organization;
 
     String website;
 
-    String adminImg;
+//    @Lob
+//    @Column(length = 10000000)
+//    byte[] adminImg;
+
+    String  adminImg;
 
     String companyName;
 
@@ -52,5 +57,8 @@ public class Admin {
     String address;
 
     String location;
+
+    @OneToMany(mappedBy = "admin",cascade = CascadeType.ALL)
+    List<Recruiter> recruiters = new ArrayList<>();
 
 }
