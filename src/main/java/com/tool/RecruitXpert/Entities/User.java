@@ -70,10 +70,18 @@ public class User {
     // versioning
     int currentResumeVersion; // store current resume id and then return
 
-    @OneToMany(mappedBy = "userToResume", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
      List<ResumeEntity> resumeList = new ArrayList<>();
 
     // one user - many jobs
     @ManyToMany(mappedBy = "usersApplied")
      List<JobsApplication> jobsApplicationList = new ArrayList<>();
+
+
+    /* _________________________ Constructors _________________________*/
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }

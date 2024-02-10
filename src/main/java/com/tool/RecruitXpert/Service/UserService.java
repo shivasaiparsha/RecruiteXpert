@@ -1,5 +1,6 @@
 package com.tool.RecruitXpert.Service;
 
+import com.tool.RecruitXpert.DTO.UserDTO.SignUserDto;
 import com.tool.RecruitXpert.DTO.UserDTO.UpdateUserStatus;
 import com.tool.RecruitXpert.DTO.UserDTO.UserRequest;
 import com.tool.RecruitXpert.DTO.UserDTO.UserResponse;
@@ -16,13 +17,36 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    public String signUp(SignUserDto signUp) throws Exception{
+
+//        validation : check unique email
+        boolean check = userRepository.existsByEmail(signUp.getEmail());
+        if(check) throw new RuntimeException("Email already present");
+
+        User user = new User(signUp.getEmail(), signUp.getPassword());
+        userRepository.save(user);
+        return "signup successfully";
+    }
+
+    public String logIn(SignUserDto login){
+        User user = userRepository.findByEmail(login.getEmail()).get();
+
+        if(user.getEmail().equals(login.getEmail()) &&
+                user.getPassword().equals(login.getPassword()))
+            return "successful login";
+
+        else return "Incorrect organisation, email or password";
+    }
+
+
     public UserResponse addUser(UserRequest userRequest) {
         User user = UserTransformer.UserRequestToUser(userRequest);
         User savedUser = userRepository.save(user);
         return UserTransformer.UserToUserResponse(savedUser);
     }
 
-    public String deleteUser(Long id) {
+    public String deleteUser(int id) {
             Optional<User> optionalUser = userRepository.findById(id);
             if(!optionalUser.isPresent()){
                 throw new UserNotFoundException("User not Found");

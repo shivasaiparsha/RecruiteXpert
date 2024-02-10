@@ -11,8 +11,10 @@ public class RecruitXpertApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RecruitXpertApplication.class, args);
 	}
+
 	@Bean
 	public ModelMapper modelMapper(){
 		return new ModelMapper();
 	}
+
 }
