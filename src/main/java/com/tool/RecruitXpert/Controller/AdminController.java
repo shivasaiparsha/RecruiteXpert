@@ -25,9 +25,9 @@ public class AdminController {
 
     // update
     //  ADMIN CAN UPDATE THE JOB ROLE AND DESCRIPTION
-    @PutMapping("/update")
-    public ResponseEntity updateAdmin(@RequestBody AdminRequest adminRequest) {
-        String message = adminService.updateAdmin(adminRequest);
+    @PutMapping("/{id}/update")
+    public ResponseEntity updateAdmin(@PathVariable Long id, @RequestBody AdminRequest adminRequest) {
+        String message = adminService.updateAdmin(id,adminRequest);
         return new ResponseEntity(message, HttpStatus.ACCEPTED);
     }
 
