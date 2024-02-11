@@ -24,22 +24,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.html.Option;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.sax.SAXResult;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static com.tool.RecruitXpert.ResumeUtility.ResumeUtilities.getMediaType;
-import static com.tool.RecruitXpert.Transformer.ResumeBuilderTransformer.buildResumeObject;
 
 @Service
 @Slf4j
@@ -128,50 +117,6 @@ public class ResumeService {
                 .contentType(getMediaType(type)).body(images);
     }
 
-//
-//
-//    public byte[] generatePDF(List<byte[]> xmlDataList) throws IOException, TransformerException {
-//        // Step 1: Prepare the XSLT transformation
-//        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-//        Transformer transformer = transformerFactory.newTransformer();
-//
-//        // Step 2: Prepare FOP
-//        FopFactory fopFactory = FopFactory.newInstance();
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
-//
-//        for (byte[] xmlData : xmlDataList) {
-//            // Step 3: Perform XSLT transformation
-//            Source src = new StreamSource(new ByteArrayInputStream(xmlData));
-//            Result res = new SAXResult(fop.getDefaultHandler());
-//            transformer.transform(src, res);
-//        }
-//
-//        return out.toByteArray();
-//    }
-//
-//    public List<byte[]> showResume(int userId) {
-//        Optional<User> op = userRepository.findById(userId);
-//        User user = op.get();
-//        List<ResumeEntity> resumeList = user.getResumeList();
-//
-//        if(resumeList.size() == 0)
-//            throw new RuntimeException("No resumes present");
-//
-//        List<byte[]> xmlDataList = new ArrayList<>();
-//
-//        for(ResumeEntity resume : resumeList){
-//            xmlDataList.add(resume.getXmlData());
-//        }
-//
-//        try {
-//            return Collections.singletonList(generatePDF(xmlDataList));
-//        } catch (IOException | TransformerException e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("Failed to generate PDF from XML");
-//        }
-//    }
-
     public List<byte []> showResume(int userId) {
         Optional<User> op = userRepository.findById(userId);
         User user = op.get();
@@ -246,7 +191,6 @@ public class ResumeService {
     }
 
     public String versionControlMethod(int resumeId) {
-
         // set resume id in user entity
         Optional<ResumeEntity> optional = resumeRepository.findById(resumeId);
         ResumeEntity resume = optional.get();
