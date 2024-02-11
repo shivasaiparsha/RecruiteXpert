@@ -47,14 +47,17 @@ public class User {
     String zipCode;
 
     // last active date : this will update when user able to sign in
-    @UpdateTimestamp    
+    @UpdateTimestamp
     Date lastActiveDate;
 
 //    // this field is only access by admin cause we're passing this para to dtos so user can't able to access it
     @Enumerated(EnumType.STRING)
      Status status; // approved | denied | deactivate
 
-    // this is recruiter - review - resume feature :
+
+// this is recruiter - review - resume feature :
+//    for this we've to store user list in this recruiter and track each users status who is approved
+//    or something
 
 
     boolean isReviewed; // if this is true then show on recruiter's portal like this person selected.
@@ -62,10 +65,8 @@ public class User {
 
     List<Integer> recruiterList = new ArrayList<>();
 
-//    // map for user to recruiter
-//    @ManyToOne
-//    @JoinColumn
-//    Recruiter recruiter;
+    int passwordCount; // checking for passwords should be < 4 times
+    boolean accountBlock;
 
     // versioning =  0
     int currentResumeVersion; // store current resume id and then return
