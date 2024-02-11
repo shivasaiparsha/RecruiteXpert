@@ -152,17 +152,15 @@ public class RecruiterService {
 
         // adminController me email integration - status return karna direct email me
         SimpleMailMessage mailMessage=new SimpleMailMessage();
-        String body="Hi Welcome to MakeYourTrip \n"+"Make Youre Tours plans Here";
+        String body="Hi Welcome to Recruit Expert portal! "+"\n get placed with our recruiters.";
         mailMessage.setSubject("Recruit Xpert");
         mailMessage.setFrom("shivasaiparsha@gmail.com");
         mailMessage.setTo(recruiter.getEmail());
         mailMessage.setText(body);
         mailSender.send(mailMessage);
 
-
         repository.save(recruiter);
         return "Status updated successful";
-
     }
 
     // getting the list who is approved
@@ -174,7 +172,6 @@ public class RecruiterService {
             if(recruiter.getRecruiterStatus()!=null &&
                     recruiter.getRecruiterStatus().equals(Status.APPROVED))
                 ans.add(recruiter);
-
         }
         return ans;
     }

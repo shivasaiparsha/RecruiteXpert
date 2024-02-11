@@ -4,6 +4,7 @@ import com.tool.RecruitXpert.Enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.aspectj.weaver.UnresolvedType;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.ArrayList;
@@ -85,4 +86,6 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
+
 }

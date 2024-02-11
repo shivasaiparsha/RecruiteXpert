@@ -31,9 +31,13 @@ public class ResumeEntity {
 
     String comment;
 
-    // condition : resume should be upload less than 4 times total.
-    @Lob  @Column(nullable = false)
-    byte[] resume;
+    @Lob
+    @Column(name = "resumeData", length = 10000000)
+    private byte[] imageData;
+
+//    // condition : resume should be upload less than 4 times total.
+//    @Lob  @Column(nullable = false)
+//    byte[] resume;
 
     @ManyToOne
     @JoinColumn(name = "userid")
