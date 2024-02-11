@@ -24,9 +24,9 @@ public class FormAdminDTO {
 
     String website;
 
-   // MultipartFile adminImg;
+    MultipartFile adminImg;
 
-    String adminImg;
+//    String adminImg;
 
     String companyName;
 

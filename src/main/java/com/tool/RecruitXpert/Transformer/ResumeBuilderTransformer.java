@@ -17,7 +17,7 @@ public class ResumeBuilderTransformer {
                 .docType(file.getContentType())
                 .user(user)
                 .comment("uploaded")
-                .resume(file.getBytes()).build();
+                .imageData(file.getBytes()).build();
         return resume;
     }
 }

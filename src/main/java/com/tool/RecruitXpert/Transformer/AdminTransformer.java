@@ -13,7 +13,7 @@ public class AdminTransformer {
                 .firstname(formAdminDTO.getFirstname())
                 .lastname(formAdminDTO.getLastname())
                 .adminRole(formAdminDTO.getRole())
-                .adminImg(formAdminDTO.getAdminImg())
+                .adminImg(formAdminDTO.getAdminImg().getBytes())
                 .address(formAdminDTO.getAddress())
                 .location(formAdminDTO.getLocation())
                 .companyName(formAdminDTO.getCompanyName())

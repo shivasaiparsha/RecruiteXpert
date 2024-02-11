@@ -25,11 +25,10 @@ public class ResumeUtilities {
                 }
             }
             InputStream inputStream = new ByteArrayInputStream(((ByteArrayOutputStream) outputStream).toByteArray());
-
             return inputStream;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
-            // Handle exception
             return null;
         }
     }

@@ -1,9 +1,6 @@
 package com.tool.RecruitXpert.Controller;
 
 
-import com.tool.RecruitXpert.DTO.AdminDTO.AdminRequest;
-import com.tool.RecruitXpert.DTO.AdminDTO.AdminResponse;
-import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterSignUp;
 import com.tool.RecruitXpert.DTO.UserDTO.SignUserDto;
 import com.tool.RecruitXpert.DTO.UserDTO.UpdateUserStatus;
 import com.tool.RecruitXpert.DTO.UserDTO.UserRequest;
@@ -73,5 +70,7 @@ public class UserController {
         String message = userService.updateUser(userRequest);
         return new ResponseEntity(message,HttpStatus.CREATED);
     }
+
+
 
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/jobs")
+@RequestMapping("/admin/jobs")
 public class JobController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class JobController {
         return new ResponseEntity(message, HttpStatus.CREATED);
     }
 
-    @GetMapping("admin/jobApplication/allListOfJobs")
+    @GetMapping("/allListOfJobsApplication")
     public ResponseEntity findAllJobLists(){
         List<JobsApplication> jobs = jobService.findAllJobLists();
         return new ResponseEntity<>(jobs, HttpStatus.CREATED);

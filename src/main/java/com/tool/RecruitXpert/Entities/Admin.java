@@ -38,11 +38,11 @@ public class Admin {
 
     String website;
 
-//    @Lob
-//    @Column(length = 10000000)
-//    byte[] adminImg;
+    @Lob
+    @Column(length = 10000000)
+    byte[] adminImg;
 
-    String  adminImg;
+
 
     String companyName;
 

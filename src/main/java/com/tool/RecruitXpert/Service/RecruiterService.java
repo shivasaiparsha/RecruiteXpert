@@ -11,6 +11,8 @@ import com.tool.RecruitXpert.Entities.Admin;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Enums.Status;
 import com.tool.RecruitXpert.Repository.RecruiterRepository;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,9 @@ public class RecruiterService {
 
     @Autowired
     RecruiterRepository repository;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     // signup recruiter :
     public String signUp(RecruiterSignUp signUp) throws Exception{
@@ -144,6 +149,16 @@ public class RecruiterService {
 
         Recruiter recruiter = op.get();
         recruiter.setRecruiterStatus(status.getRecruiterStatus());
+
+        // adminController me email integration - status return karna direct email me
+        SimpleMailMessage mailMessage=new SimpleMailMessage();
+        String body="Hi Welcome to Recruit Expert portal! "+"\n get placed with our recruiters.";
+        mailMessage.setSubject("Recruit Xpert");
+        mailMessage.setFrom("shivasaiparsha@gmail.com");
+        mailMessage.setTo(recruiter.getEmail());
+        mailMessage.setText(body);
+        mailSender.send(mailMessage);
+
         repository.save(recruiter);
         return "Status updated successful";
     }
@@ -154,9 +169,9 @@ public class RecruiterService {
         List<Recruiter> ans = new ArrayList<>();
 
         for(Recruiter recruiter : list){
-            if(recruiter.getRecruiterStatus()!=null && recruiter.getRecruiterStatus().equals(Status.APPROVED))
+            if(recruiter.getRecruiterStatus()!=null &&
+                    recruiter.getRecruiterStatus().equals(Status.APPROVED))
                 ans.add(recruiter);
-
         }
         return ans;
     }
