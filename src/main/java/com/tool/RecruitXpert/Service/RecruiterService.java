@@ -144,8 +144,13 @@ public class RecruiterService {
 
         Recruiter recruiter = op.get();
         recruiter.setRecruiterStatus(status.getRecruiterStatus());
+
+        // adminController me email integration - status return karna direct email me
+
+
         repository.save(recruiter);
         return "Status updated successful";
+
     }
 
     // getting the list who is approved
@@ -154,7 +159,8 @@ public class RecruiterService {
         List<Recruiter> ans = new ArrayList<>();
 
         for(Recruiter recruiter : list){
-            if(recruiter.getRecruiterStatus()!=null && recruiter.getRecruiterStatus().equals(Status.APPROVED))
+            if(recruiter.getRecruiterStatus()!=null &&
+                    recruiter.getRecruiterStatus().equals(Status.APPROVED))
                 ans.add(recruiter);
 
         }
