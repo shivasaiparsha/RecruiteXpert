@@ -30,7 +30,7 @@ public class AdminService {
 
         Admin admin = optional.get();
 
-        admin.setAdminImg(formAdminDTO.getAdminImg());
+        admin.setAdminImg(formAdminDTO.getAdminImg().getBytes());
         admin.setAdminRole(formAdminDTO.getRole());
         admin.setFirstname(formAdminDTO.getFirstname());
         admin.setLastname(formAdminDTO.getLastname());

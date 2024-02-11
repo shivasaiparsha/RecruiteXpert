@@ -12,12 +12,12 @@ import java.sql.Date;
 public class RecruiterHomepageResponseDTO {
 
     String recruiterName;
-    String recruiterImg;
+    byte[] recruiterImg;
     String recruiterRole;
     String recruiterLocation;
     Date recruiterDate;
     String adminName;
-    String adminImg;
+    byte[] adminImg;
     String adminRole;
     Date adminDate;
 }

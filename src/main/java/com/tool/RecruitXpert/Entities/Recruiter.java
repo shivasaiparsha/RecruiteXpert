@@ -40,7 +40,9 @@ public class Recruiter {
 
     String password;
 
-    String recruiterImg;
+    @Lob
+    @Column(length = 10000000)
+    byte[] recruiterImg;
 
     String jobRole;
 

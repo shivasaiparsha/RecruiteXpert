@@ -9,12 +9,10 @@ import com.tool.RecruitXpert.Repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.html.Option;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,14 +41,14 @@ public class ResumeService {
         long sizeInKb=sizeInBytes/1024;
         long sizeInMb = sizeInBytes /2048; // Converting bytes to megabyte
         long lowBound=50;
-        long upperBound=3;
+        long upperBound=1; // 1mb size
         if(sizeInKb<50) {
-            log.error("user not found");
+            log.error("resume size is less than  50kb log");
             throw new IOException("uploaded Resume doc size"+sizeInKb+"KB is lessthan required size"+lowBound);
         }
 
-        if(sizeInMb>3) {
-            log.error("resume size error");
+        if(sizeInMb>upperBound) {
+            log.error("resume size is greater than  1mb log");
             throw new IOException("uploaded image size"+sizeInMb+"MB is greaterthan required size"+upperBound);
         }
 
@@ -62,6 +60,7 @@ public class ResumeService {
 
 //        get current versioning  == 0
 //        set resumeId
+
 
         return "resume uploaded successfully";
     }
@@ -143,11 +142,12 @@ public class ResumeService {
         return "resume updated successfully";
     }
 
-    public ResumeEntity showResume(int userId) {
+    public ResponseEntity<byte[]>  showResume(int userId) {
         Optional<User> op = userRepository.findById(userId);
         User user = op.get();
         int resumeId = user.getCurrentResumeVersion();
-        return resumeRepository.findById(resumeId).get();
+        ResponseEntity<byte[]> resume =  downloadResume(resumeId);
+        return resume;
     }
 
 }
