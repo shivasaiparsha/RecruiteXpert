@@ -1,4 +1,4 @@
-package com.javatechie.entity;
+package com.tool.RecruitXpert.Entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

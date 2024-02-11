@@ -1,8 +1,10 @@
 package com.tool.RecruitXpert.Controller;
 
+import com.tool.RecruitXpert.DTO.AdminDTO.UpdateRecruiterStatus;
 import com.tool.RecruitXpert.DTO.RecruiterDto.AddRecruiterDto;
 import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterHomepageResponseDTO;
 
+import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterSignUp;
 import com.tool.RecruitXpert.DTO.RecruiterDto.UpdateRecruiterDto;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Service.RecruiterService;
@@ -87,6 +89,8 @@ public class RecruiterController {
 
 
     }
+
+
 
 
 }

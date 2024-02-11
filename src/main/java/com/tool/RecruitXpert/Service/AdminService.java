@@ -1,11 +1,10 @@
 package com.tool.RecruitXpert.Service;
 
 
-import com.tool.RecruitXpert.DTO.AdminDTO.FormAdminDTO;
-import com.tool.RecruitXpert.DTO.AdminDTO.AdminResponse;
-import com.tool.RecruitXpert.DTO.AdminDTO.AdminSignUp;
-import com.tool.RecruitXpert.DTO.AdminDTO.UpdateAdminDTO;
+import com.tool.RecruitXpert.DTO.AdminDTO.*;
+import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterHomepageResponseDTO;
 import com.tool.RecruitXpert.Entities.Admin;
+import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Exceptions.AdminNotFoundException;
 import com.tool.RecruitXpert.Repository.AdminRepository;
 import com.tool.RecruitXpert.Transformer.AdminTransformer;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.Optional;
 @Service
 public class AdminService {
@@ -116,4 +116,20 @@ public class AdminService {
         adminRepository.save(admin);
         return "success";
     }
-}
+
+    public AdminHomePageResponseDTO adminDashboard(Long id) {
+
+            Admin admin = adminRepository.findById(id).get();
+            AdminHomePageResponseDTO adminHomepageResponseDTO = new AdminHomePageResponseDTO();
+
+            adminHomepageResponseDTO.setAdminDate((Date) admin.getCreatedDate());
+            adminHomepageResponseDTO.setAdminImg(admin.getAdminImg());
+            adminHomepageResponseDTO.setAdminName(admin.getFirstname());
+            adminHomepageResponseDTO.setAdminRole(admin.getAdminRole());
+            adminHomepageResponseDTO.setWebsite(admin.getWebsite());
+            adminHomepageResponseDTO.setLocation(admin.getLocation());
+            adminHomepageResponseDTO.setCompanyName(admin.getCompanyName());
+            return  adminHomepageResponseDTO;
+        }
+    }
+

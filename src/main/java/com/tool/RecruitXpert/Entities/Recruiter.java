@@ -54,6 +54,10 @@ public class Recruiter {
 
     String location;
 
+    int passwordCount; // checking for passwords should be < 4 times
+
+    boolean accountBlock;
+
     @Enumerated(value = EnumType.STRING)
     Status recruiterStatus; // approved | dis-approve = cannot access |
 

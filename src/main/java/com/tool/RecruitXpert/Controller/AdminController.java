@@ -1,16 +1,18 @@
 package com.tool.RecruitXpert.Controller;
 
-import com.tool.RecruitXpert.DTO.AdminDTO.FormAdminDTO;
-import com.tool.RecruitXpert.DTO.AdminDTO.AdminResponse;
-import com.tool.RecruitXpert.DTO.AdminDTO.AdminSignUp;
-import com.tool.RecruitXpert.DTO.AdminDTO.UpdateAdminDTO;
-import com.tool.RecruitXpert.DTO.AdminDTO.UpdateRecruiterStatus;
+import com.tool.RecruitXpert.DTO.AdminDTO.*;
+import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterHomepageResponseDTO;
 import com.tool.RecruitXpert.Entities.Recruiter;
+import com.tool.RecruitXpert.JwtConfig.JwtService;
 import com.tool.RecruitXpert.Service.AdminService;
 import com.tool.RecruitXpert.Service.RecruiterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +27,11 @@ public class AdminController {
     @Autowired private AdminService adminService;
     @Autowired private RecruiterService recruiterService;
 
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @PostMapping("/sign-up")
     public ResponseEntity<?> adminSignUp(@RequestBody AdminSignUp signUpDto){
@@ -47,6 +54,15 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/authenticate")
+    public String authenticateAndGetToken(@RequestBody AdminSignUp adminSignUp) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(adminSignUp.getEmail(), adminSignUp.getPassword()));
+        if (authentication.isAuthenticated()) {
+            return jwtService.generateToken(adminSignUp.getEmail());
+        } else {
+            throw new UsernameNotFoundException("invalid user request !");
+        }
+    }
 
     @PostMapping("/updateAdminFile")
     public ResponseEntity addMultipartFile(@RequestParam MultipartFile file, @RequestParam Long id) throws  IOException{
@@ -109,6 +125,14 @@ public class AdminController {
     public ResponseEntity<?> deleteAdmin(@RequestParam Long id) {
         String message = adminService.deleteAdmin(id);
         return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/dashboard/{id}")
+    public ResponseEntity adminDashboard(@PathVariable Long id){
+        AdminHomePageResponseDTO adminHomepageResponseDTO = adminService.adminDashboard(id);
+        return new ResponseEntity<>(adminHomepageResponseDTO,HttpStatus.ACCEPTED);
+
+
     }
 
 }

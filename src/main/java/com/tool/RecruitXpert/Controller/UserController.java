@@ -1,19 +1,21 @@
 package com.tool.RecruitXpert.Controller;
 
 
-import com.tool.RecruitXpert.DTO.AdminDTO.AdminRequest;
-import com.tool.RecruitXpert.DTO.AdminDTO.AdminResponse;
-import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterSignUp;
+import com.tool.RecruitXpert.DTO.AdminDTO.UpdateRecruiterStatus;
 import com.tool.RecruitXpert.DTO.UserDTO.SignUserDto;
 import com.tool.RecruitXpert.DTO.UserDTO.UpdateUserStatus;
 import com.tool.RecruitXpert.DTO.UserDTO.UserRequest;
 import com.tool.RecruitXpert.DTO.UserDTO.UserResponse;
+import com.tool.RecruitXpert.Entities.Recruiter;
+import com.tool.RecruitXpert.Entities.User;
 import com.tool.RecruitXpert.Service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.hibernate.query.sqm.tree.SqmNode.log;
 
@@ -72,6 +74,37 @@ public class UserController {
     public ResponseEntity updateUserStatus(@RequestBody UserRequest userRequest){
         String message = userService.updateUser(userRequest);
         return new ResponseEntity(message,HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/user/listOfUsersByStatus")
+    public ResponseEntity<?> returnReturnStatus(){
+        try {
+            List<User> list = userService.getListForNullStatus();
+            return new ResponseEntity<>(list, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/approve")
+    public ResponseEntity<?> returnReturnStatus(@RequestBody UpdateUserStatus update){
+        try {
+            String response = userService.updateStatus(update);
+            return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/manage")
+    public ResponseEntity<?> getApprovedList(){
+        try {
+            List<User> list = userService.getApprovedList();
+            return new ResponseEntity<>(list, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

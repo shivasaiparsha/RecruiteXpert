@@ -4,13 +4,17 @@ import com.tool.RecruitXpert.DTO.UserDTO.SignUserDto;
 import com.tool.RecruitXpert.DTO.UserDTO.UpdateUserStatus;
 import com.tool.RecruitXpert.DTO.UserDTO.UserRequest;
 import com.tool.RecruitXpert.DTO.UserDTO.UserResponse;
+import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Entities.User;
+import com.tool.RecruitXpert.Enums.Status;
 import com.tool.RecruitXpert.Exceptions.UserNotFoundException;
 import com.tool.RecruitXpert.Repository.UserRepository;
 import com.tool.RecruitXpert.Transformer.UserTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -71,5 +75,39 @@ public class UserService {
         userRepository.save(user);
         return "Updated Successfully !!";
 
+    }
+
+    public List<User> getListForNullStatus() {
+        List<User> list = userRepository.findAll();
+        List<User> ans = new ArrayList<>();
+
+        for(User user : list){
+            if(user.getStatus() == null)
+                ans.add(user);
+        }
+        return ans;
+    }
+
+    public String updateStatus(UpdateUserStatus update) {
+        Optional<User> op = userRepository.findById(update.getId());
+        if(!op.isPresent()) throw new RuntimeException("please update correct recruiter");
+
+        User user = op.get();
+        user.setStatus(update.getStatus());
+        userRepository.save(user);
+        return "Status updated successful";
+    }
+
+    public List<User> getApprovedList() {
+
+        List<User> list = userRepository.findAll();
+        List<User> ans = new ArrayList<>();
+
+        for(User user : list){
+            if(user.getStatus()!=null && user.getStatus().equals(Status.APPROVED))
+                ans.add(user);
+
+        }
+        return ans;
     }
 }
