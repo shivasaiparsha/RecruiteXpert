@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +33,9 @@ public class ResumeService {
     @Autowired
     UserRepository userRepository;
 
+
+    // get all list of resumes
+
     // save resume in db
     public String  saveResumeToDb(MultipartFile file, int userId) throws IOException {
 
@@ -40,33 +44,35 @@ public class ResumeService {
         long sizeInMb = sizeInBytes /2048; // Converting bytes to megabyte
         long lowBound=50;
         long upperBound=3;
-        if(sizeInKb<50)
-        {
+        if(sizeInKb<50) {
             log.error("user not found");
             throw new IOException("uploaded Resume doc size"+sizeInKb+"KB is lessthan required size"+lowBound);
         }
-        if(sizeInMb>3)
-        {
+
+        if(sizeInMb>3) {
             log.error("resume size error");
             throw new IOException("uploaded image size"+sizeInMb+"MB is greaterthan required size"+upperBound);
         }
-        User user=   userRepository.findById(userId).get();
+
+        User user = userRepository.findById(userId).get();
         ResumeEntity resume= buildResumeObject(file, user);
         resumeRepository.save(resume);
         user.getResumeList().add(resume);
         userRepository.save(user);
 
-        return "resume uploaded sucessfully";
+//        get current versioning  == 0
+//        set resumeId
+
+        return "resume uploaded successfully";
     }
 
-
     // download  Resume service
-    public ResponseEntity<byte[]> downloadResume(Integer id){
+    public ResponseEntity<byte[]> downloadResume(Integer id) {
         Optional<ResumeEntity> dbImageData = resumeRepository.findById(id);
-        byte[] images= dbImageData.get().getResume();
+        byte[] images = dbImageData.get().getResume();
 
-        String typearray[]=dbImageData.get().getDocType().split("/");
-        String type=typearray[1];
+        String typearray[] = dbImageData.get().getDocType().split("/");
+        String type = typearray[1];
 
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(getMediaType(type))
@@ -75,17 +81,16 @@ public class ResumeService {
 
 
     // find all resumes of particular User with user id
-    public List<InputStream> findAllResumes(int userid) throws Exception
-    {
+    public List<InputStream> findAllResumes(int userid) throws Exception {
         User user = userRepository.findById(userid).get();
-        if(user == null) throw new UserNotFoundException("user not found with userId "+userid);
-        List<ResumeEntity> resumeEntitiesList=resumeRepository.findByUser(user);
+        if (user == null) throw new UserNotFoundException("user not found with userId " + userid);
+        List<ResumeEntity> resumeEntitiesList = resumeRepository.findByUser(user);
 
-        if(resumeEntitiesList.size() == 0){
+        if (resumeEntitiesList.size() == 0) {
             throw new ResumeNotFoundException("Resume  Not Found Exception");
         }
         List<ResumeEntity> resumeList = new ArrayList<>();
-        for(ResumeEntity resumeEntity : resumeEntitiesList){
+        for (ResumeEntity resumeEntity : resumeEntitiesList) {
             resumeList.add(resumeEntity);
         }
 
@@ -103,21 +108,47 @@ public class ResumeService {
     // Delete resume by resumeId service
     public String deleteResumeByResumeId(int resumeId) throws Exception {
 
-        if(!resumeRepository.existsById(resumeId))
+        if (!resumeRepository.existsById(resumeId))
             throw new Exception("resume not found exception"); //if resume id not found throw exception
         resumeRepository.deleteById(resumeId);
         return resumeId + " resume : " + resumeId + " deleted successfully";
     }
 
     //delete resumes of user by user id services
-    public  String deleteUserByUserId(int userId) throws Exception
-    {
-        if(!userRepository.existsById(userId))
-            throw new UserNotFoundException("user not found with userId "+userId);
+    public String deleteUserByUserId(int userId) throws Exception {
+        if (!userRepository.existsById(userId))
+            throw new UserNotFoundException("user not found with userId " + userId);
 
         User user = userRepository.findById(userId).get();
         resumeRepository.deleteByUserId(userId);
-        return "successfully deleted resumes of userId :"+userId;
+        return "successfully deleted resumes of userId :" + userId;
+    }
+
+    public List<ResumeEntity> getResumeList() {
+        return resumeRepository.findAll();
+    }
+
+    public String versionControlMethod(int resumeId) {
+
+        // set resume id in user entity
+        Optional<ResumeEntity> optional = resumeRepository.findById(resumeId);
+        ResumeEntity resume = optional.get();
+        int userId = resume.getUser().getUserId();
+
+        User user = userRepository.findById(userId).get();
+        user.setCurrentResumeVersion(resumeId);
+
+        userRepository.save(user);
+
+        return "resume updated successfully";
+    }
+
+    public ResumeEntity showResume(int userId) {
+        Optional<User> op = userRepository.findById(userId);
+        User user = op.get();
+        int resumeId = user.getCurrentResumeVersion();
+        return resumeRepository.findById(resumeId).get();
     }
 
 }
+

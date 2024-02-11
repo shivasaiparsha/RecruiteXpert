@@ -67,7 +67,7 @@ public class User {
 //    @JoinColumn
 //    Recruiter recruiter;
 
-    // versioning
+    // versioning =  0
     int currentResumeVersion; // store current resume id and then return
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
