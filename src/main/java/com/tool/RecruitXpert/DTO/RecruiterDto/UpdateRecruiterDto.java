@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @AllArgsConstructor
@@ -21,7 +22,7 @@ public class UpdateRecruiterDto {
 
     String password;
 
-    String recruiterImg;
+    MultipartFile recruiterImg;
 
     String jobRole;
 }

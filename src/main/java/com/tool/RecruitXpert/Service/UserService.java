@@ -9,6 +9,8 @@ import com.tool.RecruitXpert.Exceptions.UserNotFoundException;
 import com.tool.RecruitXpert.Repository.UserRepository;
 import com.tool.RecruitXpert.Transformer.UserTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,6 +20,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JavaMailSender mailSender;
+
     public String signUp(SignUserDto signUp) throws Exception{
 
 //        validation : check unique email
@@ -26,6 +31,16 @@ public class UserService {
 
         User user = new User(signUp.getEmail(), signUp.getPassword());
         userRepository.save(user);
+
+        // email integration
+        SimpleMailMessage mailMessage=new SimpleMailMessage();
+
+        String body="Hi Welcome to RecruitXpert \n"+" Let's start your job search";
+        mailMessage.setSubject("RecruitXpert");
+        mailMessage.setFrom("shivasaiparsha@gmail.com");
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setText(body);
+        mailSender.send(mailMessage);
         return "signup successfully";
     }
 

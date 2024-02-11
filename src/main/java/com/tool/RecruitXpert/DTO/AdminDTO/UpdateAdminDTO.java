@@ -21,9 +21,9 @@ public class UpdateAdminDTO {
 
     String website;
 
-    //MultipartFile adminImg;
+    MultipartFile adminImg;
 
-    String adminImg;
+//    String adminImg;
 
     String companyName;
 

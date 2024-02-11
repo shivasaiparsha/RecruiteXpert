@@ -59,8 +59,7 @@ public class ResumeController {
     @PostMapping("/viewResume")
     public ResponseEntity<?> showResume(@PathVariable int userId){
         try {
-            ResumeEntity response = resumeService.showResume(userId);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return resumeService.showResume(userId);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
@@ -69,7 +68,7 @@ public class ResumeController {
     // upload resume by specific user
     @PostMapping("/upload")
     public ResponseEntity<String> uploadResume(@RequestParam("image") MultipartFile file,
-                                               @RequestParam("userid") Integer userid) throws IOException {
+                                               @RequestParam("userid") int userid) throws IOException {
         try {
             String uploadResume = resumeService.saveResumeToDb(file, userid);
             return ResponseEntity.status(HttpStatus.OK)
@@ -112,9 +111,15 @@ public class ResumeController {
     // delete resumes of user by userid
     @DeleteMapping("/deleteByUserId")
     public ResponseEntity<String> deleteUserById(@RequestParam("userId") Integer userId) throws Exception {
+         try {
+             String message = resumeService.deleteUserByUserId(userId);
+             return new ResponseEntity<>(message, HttpStatus.OK);
+         }
+         catch (Exception e)
+         {
+             throw new Exception(e.getMessage());
+         }
 
-        String message = resumeService.deleteUserByUserId(userId);
-        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     // get All files of user
