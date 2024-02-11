@@ -1,7 +1,10 @@
 package com.tool.RecruitXpert.Controller;
 
 
+<<<<<<< HEAD
 import com.tool.RecruitXpert.DTO.AdminDTO.UpdateRecruiterStatus;
+=======
+>>>>>>> 9a7486afa8fc40465507b6c54c76c4eccce87a56
 import com.tool.RecruitXpert.DTO.UserDTO.SignUserDto;
 import com.tool.RecruitXpert.DTO.UserDTO.UpdateUserStatus;
 import com.tool.RecruitXpert.DTO.UserDTO.UserRequest;
@@ -77,6 +80,7 @@ public class UserController {
     }
 
 
+<<<<<<< HEAD
     @GetMapping("/user/listOfUsersByStatus")
     public ResponseEntity<?> returnReturnStatus(){
         try {
@@ -106,5 +110,7 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+=======
+>>>>>>> 9a7486afa8fc40465507b6c54c76c4eccce87a56
 
 }

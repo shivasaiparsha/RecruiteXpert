@@ -17,7 +17,8 @@ public interface ResumeRepository extends JpaRepository<ResumeEntity, Integer> {
 
     Optional<ResumeEntity> findByName(String name);
 
-    List<ResumeEntity> findByUser(User user);
+    List<User> findByUser(User user);
+//    List<ResumeEntity> findByUser(User user);
 
     @Transactional
     @Modifying
