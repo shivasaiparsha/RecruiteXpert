@@ -7,25 +7,19 @@ import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterSignUp;
 
 import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterHomepageResponseDTO;
 import com.tool.RecruitXpert.DTO.RecruiterDto.UpdateRecruiterDto;
+import com.tool.RecruitXpert.DTO.RecruiterDto.responseDto.AssignRecruiterResponse;
 import com.tool.RecruitXpert.Entities.Admin;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Enums.Status;
 import com.tool.RecruitXpert.Repository.RecruiterRepository;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
 import java.sql.Date;
-import java.util.Arrays;
-
 import java.util.Optional;
 
 @Service
@@ -90,8 +84,6 @@ public class RecruiterService {
             recruiter.setPasswordCount(count + 1);
             return "Incorrect organisation, email or password";
         }
-
-
     }
 
     // add recruiter
@@ -161,10 +153,8 @@ public class RecruiterService {
         return  recruiterHomepageResponseDTO;
     }
 
-
-
     // recruiter can approve or disapprove the user status
-    public String updateStatus(UpdateRecruiterStatus status){
+    public String updateStatus(UpdateRecruiterStatus status) {
         Optional<Recruiter> op = repository.findById(status.getId());
         if(!op.isPresent()) throw new RuntimeException("please update correct recruiter");
 
@@ -172,12 +162,13 @@ public class RecruiterService {
         recruiter.setRecruiterStatus(status.getRecruiterStatus());
 
         // adminController me email integration - status return karna direct email me
-        SimpleMailMessage mailMessage=new SimpleMailMessage();
-        String body="Hi Welcome to Recruit Expert portal! "+"\n get placed with our recruiters.";
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        String msg = "Hi Welcome to Recruit Expert portal! "+"\n get placed with our recruiters.";
+        String body1 = msg + "\n Admin updated you're profiles status to : " + status.getRecruiterStatus();
         mailMessage.setSubject("Recruit Xpert");
         mailMessage.setFrom("shivasaiparsha@gmail.com");
         mailMessage.setTo(recruiter.getEmail());
-        mailMessage.setText(body);
+        mailMessage.setText(body1);
         mailSender.send(mailMessage);
 
         repository.save(recruiter);
@@ -195,6 +186,19 @@ public class RecruiterService {
                 ans.add(recruiter);
         }
         return ans;
+    }
+
+    public List<AssignRecruiterResponse> getAllListOfRecruiters() {
+        List<Recruiter> list = repository.findAll();
+        List<AssignRecruiterResponse> returnList = new ArrayList<>();
+
+        for(Recruiter recruiter : list){
+            AssignRecruiterResponse assign = new AssignRecruiterResponse(recruiter.getId(),
+                    recruiter.getFirstname(), recruiter.getJobRole());
+
+            returnList.add(assign);
+        }
+        return returnList;
     }
 
     // recruiter can change the status of user like [commenter | reviewer | all actions ]

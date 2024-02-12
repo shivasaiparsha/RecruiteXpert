@@ -2,12 +2,18 @@ package com.tool.RecruitXpert.Service;
 
 
 import com.tool.RecruitXpert.DTO.AdminDTO.*;
+import com.tool.RecruitXpert.DTO.RecruiterDto.JobAssignDto;
 import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterHomepageResponseDTO;
 import com.tool.RecruitXpert.Entities.Admin;
 import com.tool.RecruitXpert.Entities.Recruiter;
+import com.tool.RecruitXpert.Enums.RecruiterRoles;
+import com.tool.RecruitXpert.Enums.Status;
 import com.tool.RecruitXpert.Exceptions.AdminNotFoundException;
 import com.tool.RecruitXpert.Repository.AdminRepository;
+import com.tool.RecruitXpert.Repository.RecruiterRepository;
 import com.tool.RecruitXpert.Transformer.AdminTransformer;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +24,8 @@ import java.sql.Date;
 import java.util.Optional;
 @Service
 public class AdminService {
-    @Autowired
-    private AdminRepository adminRepository;
-
+    @Autowired private AdminRepository adminRepository;
+    @Autowired private RecruiterRepository recruiterRepository;
 
     @Autowired
     ModelMapper modelMapper;
@@ -38,20 +43,13 @@ public class AdminService {
         admin.setLocation(formAdminDTO.getLocation());
         admin.setWebsite(formAdminDTO.getWebsite());
         admin.setCompanyName(formAdminDTO.getCompanyName());
-
-
          adminRepository.save(admin);
 
         return "Successfully added !!";
     }
 
-
-
-
     public String updateAdmin(UpdateAdminDTO adminRequest) throws IOException {
-
         Optional<Admin> optionalAdmin = adminRepository.findById(adminRequest.getAdminId());
-
         if(!optionalAdmin.isPresent())
             throw new AdminNotFoundException("Enter correct ID, Admin not Found");
 
@@ -108,14 +106,14 @@ public class AdminService {
         else return "Incorrect organisation, email or password";
     }
 
-    public String addMultipartFile(MultipartFile file, Long id) throws IOException{
-
-        Admin admin = adminRepository.findById(id).get();
-        //byte[] fileImage= file.getBytes();
-      //  admin.setAdminImg(fileImage);
-        adminRepository.save(admin);
-        return "success";
-    }
+//    public String addMultipartFile(MultipartFile file, Long id) throws IOException{
+//
+//        Admin admin = adminRepository.findById(id).get();
+//        //byte[] fileImage= file.getBytes();
+//      //  admin.setAdminImg(fileImage);
+//        adminRepository.save(admin);
+//        return "success";
+//    }
 
     public AdminHomePageResponseDTO adminDashboard(Long id) {
 
@@ -131,5 +129,20 @@ public class AdminService {
             adminHomepageResponseDTO.setCompanyName(admin.getCompanyName());
             return  adminHomepageResponseDTO;
         }
+
+    public String jobAssigned(JobAssignDto jobAssignDto) {
+
+        Recruiter recruiter = recruiterRepository.findById(jobAssignDto.getRecruiterId()).get();
+
+
+//        recruiter.setRecruiterStatus(jobAssignDto.getRecruiterRole().);
+
+        return "status updated Successfully";
     }
+
+    public String deleteJob(Long jobId) {
+
+        return "job deleted successfully";
+    }
+}
 

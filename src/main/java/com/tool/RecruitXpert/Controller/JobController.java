@@ -11,21 +11,25 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/jobs")
+@RequestMapping("jobs")
 public class JobController {
 
     @Autowired
     private JobService jobService;
 
-    @PostMapping("/create")
-    public ResponseEntity createJob(@RequestBody JobCreationDTO jobCreationDTO){
-        String message = jobService.createJob(jobCreationDTO);
-        return new ResponseEntity(message, HttpStatus.CREATED);
-    }
 
-    @GetMapping("/allListOfJobsApplication")
-    public ResponseEntity findAllJobLists(){
+    // here we're just showing all the job list for user to apply
+    @GetMapping("/showAllJobList")
+    public ResponseEntity<?> findAllJobList(){
         List<JobsApplication> jobs = jobService.findAllJobLists();
         return new ResponseEntity<>(jobs, HttpStatus.CREATED);
     }
+
+    // update and delete endpoint
+    @GetMapping("/updateJobs")
+    public ResponseEntity<?> updateJobs(){
+        List<JobsApplication> jobs = jobService.findAllJobLists();
+        return new ResponseEntity<>(jobs, HttpStatus.CREATED);
+    }
+
 }

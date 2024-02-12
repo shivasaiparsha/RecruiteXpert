@@ -36,12 +36,13 @@ public class JobsApplication {
     @CreationTimestamp
     Date lastDate;
 
-   // many-to-many to user - jobs application
-
+    // many-to-many to user - jobs application
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_jobs",
             joinColumns = @JoinColumn(name = "job_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     List<User> usersApplied = new ArrayList<>();
+
+    // i think i've to create an ManyToOne mapping for jobs - to - user here
 
 }

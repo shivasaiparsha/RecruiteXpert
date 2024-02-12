@@ -1,14 +1,11 @@
 package com.tool.RecruitXpert.Controller;
 
 
-<<<<<<< HEAD
-import com.tool.RecruitXpert.DTO.AdminDTO.UpdateRecruiterStatus;
-=======
->>>>>>> 9a7486afa8fc40465507b6c54c76c4eccce87a56
 import com.tool.RecruitXpert.DTO.UserDTO.SignUserDto;
 import com.tool.RecruitXpert.DTO.UserDTO.UpdateUserStatus;
 import com.tool.RecruitXpert.DTO.UserDTO.UserRequest;
 import com.tool.RecruitXpert.DTO.UserDTO.UserResponse;
+import com.tool.RecruitXpert.Entities.JobsApplication;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Entities.User;
 import com.tool.RecruitXpert.Service.UserService;
@@ -20,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @RestController
 @RequestMapping("/user")
@@ -30,8 +26,21 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // apply jobs
+    @PutMapping("jobAppliedByUser")
+    public ResponseEntity<?> jobAppliedByUser(@PathVariable("jobId") long jobApplicationId,
+                                              @PathVariable("userId") int userId) {
+        try {
+            String response = userService.jobAppliedByUser(jobApplicationId, userId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        }
+    }
+
     @PostMapping("/sign-up")
-    public ResponseEntity<?> recruiterSignUp(@RequestBody SignUserDto signUpDto){
+    public ResponseEntity<?> recruiterSignUp(@RequestBody SignUserDto signUpDto) {
         try {
             String response = userService.signUp(signUpDto);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -42,7 +51,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> recruiterSignIn(@RequestBody SignUserDto loginDto){
+    public ResponseEntity<?> recruiterSignIn(@RequestBody SignUserDto loginDto) {
         try {
             String response = userService.logIn(loginDto);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -68,21 +77,19 @@ public class UserController {
 
     //create DTO : update user account status by id
     @PutMapping("/update_status")
-    public ResponseEntity updateUserStatus(@RequestBody UpdateUserStatus updateUserStatus){
-          String message = userService.updateUserStatus(updateUserStatus);
-          return new ResponseEntity(message,HttpStatus.CREATED);
+    public ResponseEntity updateUserStatus(@RequestBody UpdateUserStatus updateUserStatus) {
+        String message = userService.updateUserStatus(updateUserStatus);
+        return new ResponseEntity(message, HttpStatus.CREATED);
     }
 
     @PutMapping("/update_user")
-    public ResponseEntity updateUserStatus(@RequestBody UserRequest userRequest){
+    public ResponseEntity updateUserStatus(@RequestBody UserRequest userRequest) {
         String message = userService.updateUser(userRequest);
-        return new ResponseEntity(message,HttpStatus.CREATED);
+        return new ResponseEntity(message, HttpStatus.CREATED);
     }
 
-
-<<<<<<< HEAD
     @GetMapping("/user/listOfUsersByStatus")
-    public ResponseEntity<?> returnReturnStatus(){
+    public ResponseEntity<?> returnReturnStatus() {
         try {
             List<User> list = userService.getListForNullStatus();
             return new ResponseEntity<>(list, HttpStatus.ACCEPTED);
@@ -92,7 +99,7 @@ public class UserController {
     }
 
     @PutMapping("/approve")
-    public ResponseEntity<?> returnReturnStatus(@RequestBody UpdateUserStatus update){
+    public ResponseEntity<?> returnReturnStatus(@RequestBody UpdateUserStatus update) {
         try {
             String response = userService.updateStatus(update);
             return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
@@ -102,7 +109,7 @@ public class UserController {
     }
 
     @GetMapping("/manage")
-    public ResponseEntity<?> getApprovedList(){
+    public ResponseEntity<?> getApprovedList() {
         try {
             List<User> list = userService.getApprovedList();
             return new ResponseEntity<>(list, HttpStatus.ACCEPTED);
@@ -110,7 +117,14 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-=======
->>>>>>> 9a7486afa8fc40465507b6c54c76c4eccce87a56
 
+    @GetMapping("/get-List-of-Applied-Jobs/{id}")
+    public ResponseEntity<?> getAllAppliedJobList(@PathVariable("id") int userId) {
+        try {
+            List<JobsApplication> list = userService.getAllAppliedJobList(userId);
+            return new ResponseEntity<>(list, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

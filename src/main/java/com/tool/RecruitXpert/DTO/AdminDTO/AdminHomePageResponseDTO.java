@@ -14,7 +14,7 @@ import java.sql.Date;
 
         String adminName;
 
-        String adminImg;
+        byte[] adminImg;
 
         String adminRole;
 

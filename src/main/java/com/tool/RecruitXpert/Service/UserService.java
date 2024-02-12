@@ -4,10 +4,12 @@ import com.tool.RecruitXpert.DTO.UserDTO.SignUserDto;
 import com.tool.RecruitXpert.DTO.UserDTO.UpdateUserStatus;
 import com.tool.RecruitXpert.DTO.UserDTO.UserRequest;
 import com.tool.RecruitXpert.DTO.UserDTO.UserResponse;
+import com.tool.RecruitXpert.Entities.JobsApplication;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Entities.User;
 import com.tool.RecruitXpert.Enums.Status;
 import com.tool.RecruitXpert.Exceptions.UserNotFoundException;
+import com.tool.RecruitXpert.Repository.JobRepository;
 import com.tool.RecruitXpert.Repository.UserRepository;
 import com.tool.RecruitXpert.Transformer.UserTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +26,9 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JobRepository jobRepository;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -129,15 +135,29 @@ public class UserService {
     }
 
     public List<User> getApprovedList() {
-
         List<User> list = userRepository.findAll();
         List<User> ans = new ArrayList<>();
-
         for(User user : list){
-            if(user.getStatus()!=null && user.getStatus().equals(Status.APPROVED))
-                ans.add(user);
-
+            if(user.getStatus()!=null && user.getStatus().equals(Status.APPROVED)) ans.add(user);
         }
         return ans;
+    }
+
+    public String jobAppliedByUser(long jobApplicationId, int userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        JobsApplication jobs = jobRepository.findById(jobApplicationId).get();
+
+        User user = userOptional.get();
+        user.getJobsApplicationList().add(jobs);
+        userRepository.save(user);
+        return "Job applied successfully";
+    }
+
+    public List<JobsApplication> getAllAppliedJobList(int userId) {
+
+        Optional<User> optionalUser = userRepository.findById(userId);
+        List<JobsApplication> list =  optionalUser.get().getJobsApplicationList();
+        return list;
     }
 }

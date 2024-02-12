@@ -1,6 +1,6 @@
 package com.tool.RecruitXpert.Entities;
 
-import com.tool.RecruitXpert.Enums.ActivateRecruiter;
+import com.tool.RecruitXpert.Enums.RecruiterRoles;
 import com.tool.RecruitXpert.Enums.Status;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,9 +11,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 @FieldDefaults(level= AccessLevel.PRIVATE)
@@ -46,8 +44,6 @@ public class Recruiter {
 
     String jobRole;
 
-    String recruiterPermission; // approve | comment | reviewer
-
     @CreationTimestamp
     Date createdDate;
 
@@ -67,7 +63,7 @@ public class Recruiter {
 
 
     @Enumerated(value = EnumType.STRING)
-    ActivateRecruiter activateRecruiter; // active | de-active
+    RecruiterRoles recruiterRole; // active | de-active
 
 
 //    // mapped for user to recruiter

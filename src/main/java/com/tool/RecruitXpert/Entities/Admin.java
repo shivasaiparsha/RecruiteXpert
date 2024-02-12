@@ -42,8 +42,6 @@ public class Admin {
     @Column(length = 10000000)
     byte[] adminImg;
 
-
-
     String companyName;
 
     String adminRole;

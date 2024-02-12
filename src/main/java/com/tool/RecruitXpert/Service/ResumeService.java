@@ -1,30 +1,22 @@
 package com.tool.RecruitXpert.Service;
 
+import com.tool.RecruitXpert.DTO.RecruiterDto.responseDto.ResponseForResumeName;
 import com.tool.RecruitXpert.Entities.ResumeEntity;
 import com.tool.RecruitXpert.Entities.User;
-import com.tool.RecruitXpert.Exceptions.ResumeNotFoundException;
 import com.tool.RecruitXpert.Exceptions.UserNotFoundException;
 import com.tool.RecruitXpert.Repository.ResumeRepository;
 import com.tool.RecruitXpert.Repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.xml.transform.*;
-import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.stream.StreamSource;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -38,16 +30,36 @@ public class ResumeService {
     @Autowired
     UserRepository userRepository;
 
-
-    // get all list of resumes
-
     // save resume in db
-    public String saveResumeToDb(MultipartFile file, int userId) throws IOException {
+    public String saveResumeToDb(MultipartFile file, int userId) throws Exception {
 
-        if (!userRepository.existsById(userId))
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent())
             throw new RuntimeException("User not found");
 
+        // while saving we can check if there is only 4 resumes we can upload
         User user = userRepository.findById(userId).get();
+        int size = userOptional.get().getResumeList().size();
+        if(size > 4) throw new RuntimeException("You already cross the limit for uploading resume");
+
+        long sizeInBytes = file.getSize(); // Getting size of the uploaded file in bytes
+
+        System.out.println(sizeInBytes);
+
+        long sizeInKb=sizeInBytes/1024;
+        long sizeInMb = sizeInBytes /2048; // Converting bytes to megabyte
+        long lowBound=50;
+        long upperBound=1; // 1mb size
+        if(sizeInKb<50) {
+            log.error("resume size is less than  50kb log");
+            throw new Exception("uploaded Resume doc size"+ sizeInKb +"KB is lessthan required size"+ lowBound);
+        }
+
+
+        if(sizeInMb>upperBound) {
+            log.error("resume size is greater than  1mb log");
+            throw new Exception("uploaded image size"+sizeInMb+"MB is greaterthan required size"+upperBound);
+        }
 
         ResumeEntity imageData = resumeRepository.save(ResumeEntity.builder()
                 .name(file.getOriginalFilename())
@@ -62,51 +74,9 @@ public class ResumeService {
         } else return "File not uploaded successfully";
     }
 
-//        long sizeInBytes = file.getSize(); // Getting size of the uploaded file in bytes
-//        long sizeInKb=sizeInBytes/1024;
-//        long sizeInMb = sizeInBytes /2048; // Converting bytes to megabyte
-//        long lowBound=50;
-//        long upperBound=1; // 1mb size
-//        if(sizeInKb<50) {
-//            log.error("resume size is less than  50kb log");
-//            throw new IOException("uploaded Resume doc size"+sizeInKb+"KB is lessthan required size"+lowBound);
-//        }
-//
-//        if(sizeInMb>upperBound) {
-//            log.error("resume size is greater than  1mb log");
-//            throw new IOException("uploaded image size"+sizeInMb+"MB is greaterthan required size"+upperBound);
-//        }
-//
-//        User user = userRepository.findById(userId).get();
-//        ResumeEntity resume= buildResumeObject(file, user);
-//        resumeRepository.save(resume);
-//        user.getResumeList().add(resume);
-//        userRepository.save(user);
-//
-////        get current versioning  == 0
-////        set resumeId
-//        return "resume uploaded successfully";
-//    }
 
-    // download  Resume service
-
+    // see Resume from database
     public ResponseEntity<?> downloadResume(Integer id) {
-
-//        Optional<ResumeEntity> dbImageData = resumeRepository.findById(id);
-//        ResumeEntity resumeEntity = dbImageData.get();
-//        resumeEntity.setName("resume.docx");
-//        byte[] images = dbImageData.get().getImageData();
-//
-//        String typearray[] = dbImageData.get().getDocType().split("/");
-//        String type = typearray[1];
-//
-//        MediaType type1 = getMediaType(type);
-//
-//        return ResponseEntity.status(HttpStatus.OK)
-//                .contentType(getMediaType(type))
-//                .body(images);
-//    }
-
         Optional<ResumeEntity> resumeList = resumeRepository.findById(id);
         byte[] images = resumeList.get().getImageData();
 
@@ -117,7 +87,9 @@ public class ResumeService {
                 .contentType(getMediaType(type)).body(images);
     }
 
-    public List<byte []> showResume(int userId) {
+    // send list of resumes from this
+    public List<ResponseForResumeName> showResume(int userId) {
+
         Optional<User> op = userRepository.findById(userId);
         User user = op.get();
         List<ResumeEntity> resumeList = user.getResumeList();
@@ -125,42 +97,14 @@ public class ResumeService {
         if(resumeList.size() == 0)
             throw new RuntimeException("No resumes present");
 
-        List<byte[]> byteArrList = new ArrayList<>();
-
+        List<ResponseForResumeName> response = new ArrayList<>();
         for(ResumeEntity resume : resumeList){
-            byteArrList.add(resume.getImageData());
+            ResponseForResumeName addThis = new ResponseForResumeName(resume.getResumeId(), resume.getName());
+            response.add(addThis);
         }
-        return byteArrList;
+        return response;
     }
 
-
-    // find all resumes of particular User with user id
-    public List<InputStream> findAllResumes(int userid) throws Exception {
-        Optional<User> user = userRepository.findById(userid);
-
-        if (user.isEmpty())
-            throw new UserNotFoundException("user not found with userId " + userid);
-
-        User user1 = user.get();
-        // check this case is working or not
-        List<ResumeEntity> resumeEntitiesList = user.get().getResumeList();
-        if (resumeEntitiesList.size() == 0) {
-            throw new ResumeNotFoundException("Resume  Not Found Exception");
-        }
-
-        List<ResumeEntity> returnResumes = new ArrayList<>();
-        for (ResumeEntity resumeEntity : resumeEntitiesList) {
-            returnResumes.add(resumeEntity);
-        }
-
-        List<InputStream> pdfStreams = new ArrayList<>();
-        for (ResumeEntity pdfEntity : resumeEntitiesList) {
-            // Create an InputStream from the byte array of the PDF content
-            InputStream pdfStream = new ByteArrayInputStream(pdfEntity.getImageData());
-            pdfStreams.add(pdfStream);
-        }
-        return pdfStreams;
-    }
 
     // Delete resume by resumeId service
     public String deleteResumeByResumeId(int resumeId) throws Exception {

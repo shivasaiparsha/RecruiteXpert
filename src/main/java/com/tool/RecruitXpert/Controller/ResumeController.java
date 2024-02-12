@@ -1,23 +1,18 @@
 package com.tool.RecruitXpert.Controller;
 
 
-import com.tool.RecruitXpert.Entities.ResumeEntity;
+import com.tool.RecruitXpert.DTO.RecruiterDto.responseDto.ResponseForResumeName;
 import com.tool.RecruitXpert.ResumeUtility.ResumeUtilities;
 import com.tool.RecruitXpert.Service.ResumeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.sql.ClientInfoStatus;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -57,6 +52,9 @@ public class ResumeController {
             log.error("resume size not in correct format");
             throw new IOException(e.getMessage());
         }
+        catch (Exception e){
+            return new ResponseEntity<>("Resume size is exceed > 1 mb", HttpStatus.BAD_REQUEST);
+        }
     }
 
     // view resume by id
@@ -73,49 +71,14 @@ public class ResumeController {
 
     //Versioning : update this logic to above endpoints
     @GetMapping("/viewAllResume/{id}")
-    public ResponseEntity<?> showResume(@PathVariable("id") int userId) throws Exception{
+    public ResponseEntity<List<ResponseForResumeName>> showResume(@PathVariable("id") int userId) throws Exception{
         try {
-//            byte [] list =  resumeService.showResume(userId);
-            List<byte[]> list =  resumeService.showResume(userId);
+            List<ResponseForResumeName> list =  resumeService.showResume(userId);
             return new ResponseEntity<>(list, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
     }
-
-
-    // get all PDF's from here
-    @GetMapping(value = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<InputStreamResource> getAllPdfOnly(@RequestParam Integer userid) throws Exception {
-
-        List<InputStream> pdfStreams = resumeService.findAllResumes(userid); // Your method to retrieve PDF streams
-        InputStream combinedPdfStream = combinePdfStreams(pdfStreams);
-        InputStreamResource resource = new InputStreamResource(combinedPdfStream);
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(resource);
-    }
-    private InputStream combinePdfStreams(List<InputStream> pdfStreams) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            for (InputStream pdfStream : pdfStreams) {
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = pdfStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
-                }
-            }
-            InputStream inputStream = new ByteArrayInputStream(((ByteArrayOutputStream) outputStream).toByteArray());
-
-            return inputStream;
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Handle exception
-            return null;
-        }
-    }
-
 
     // delete resume by resume id
     @DeleteMapping("deleteResumeById/{resumeId}")
@@ -138,22 +101,5 @@ public class ResumeController {
          }
          catch (Exception e){ throw new Exception(e.getMessage()); }
     }
-
-    // get All files of user
-    //consider this case | during upload we've to check if the resume is already 3 in db or not ?
-
-    @GetMapping(value = "/getAllFile/{id}", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<InputStreamResource> getAllImages(@PathVariable("id") Integer userid)
-            throws Exception, IOException {
-
-        List<InputStream> pdfStreams = resumeService.findAllResumes(userid); //  method to retrieve PDF streams
-        InputStream combinedPdfStream = resumeUtilities.combinePdfStreams(pdfStreams); // it combine all the resumes of pdfstream
-        InputStreamResource resource = new InputStreamResource(combinedPdfStream);// create the newinout stream
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(resource);
-    }
-
 
 }
