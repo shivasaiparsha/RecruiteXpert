@@ -31,5 +31,5 @@ public class JobController {
         List<JobsApplication> jobs = jobService.findAllJobLists();
         return new ResponseEntity<>(jobs, HttpStatus.CREATED);
     }
-
+// code pushed
 }
