@@ -1,7 +1,7 @@
-//package com.tool.RecruitXpert.JwtConfig;
+//package com.tool.RecruitXpert.Security.Jwt;
 //
-//import com.tool.RecruitXpert.JwtConfig.JwtService;
-//import com.tool.RecruitXpert.Security.UserInfoUserDetailsService;
+//import com.tool.RecruitXpert.Security.Mics.JwtService;
+//import com.tool.RecruitXpert.Security.Mics.UserInfoUserDetailsService;
 //import jakarta.servlet.FilterChain;
 //import jakarta.servlet.ServletException;
 //import jakarta.servlet.http.HttpServletRequest;
