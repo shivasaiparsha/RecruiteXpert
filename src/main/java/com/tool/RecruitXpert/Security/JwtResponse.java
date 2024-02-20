@@ -8,5 +8,5 @@ import lombok.*;
 @Builder
 public class JwtResponse {
     private String jwtToken;
-    private String email;
+    private String name;
 }

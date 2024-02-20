@@ -19,6 +19,7 @@ public class UserInfoUserDetails implements UserDetails {
 
 
     public UserInfoUserDetails(UserInfo userInfo) {
+
         name=userInfo.getName();
         password=userInfo.getPassword();
         authorities= Arrays.stream(userInfo.getRoles().split(","))
@@ -27,13 +28,6 @@ public class UserInfoUserDetails implements UserDetails {
     }
 
 
-//    public UserInfoUserDetails(UserInfo userInfo) {
-//        name=userInfo.getName();
-//        password=userInfo.getPassword();
-//        authorities= Arrays.stream(userInfo.getRoles().split(","))
-//                .map(SimpleGrantedAuthority::new)
-//                .collect(Collectors.toList());
-//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
