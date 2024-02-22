@@ -2,19 +2,24 @@ package com.tool.RecruitXpert.Controller;
 
 import com.tool.RecruitXpert.DTO.AdminDTO.*;
 import com.tool.RecruitXpert.DTO.JobDTO.JobCreationDTO;
+import com.tool.RecruitXpert.DTO.LogIn.LogIn;
 import com.tool.RecruitXpert.DTO.RecruiterDto.JobAssignDto;
-import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterHomepageResponseDTO;
 import com.tool.RecruitXpert.DTO.RecruiterDto.responseDto.AssignRecruiterResponse;
 import com.tool.RecruitXpert.Entities.Recruiter;
-import com.tool.RecruitXpert.Enums.RecruiterRoles;
+import com.tool.RecruitXpert.Security.Jwt.JwtService;
+import com.tool.RecruitXpert.Security.UserInfoController;
 import com.tool.RecruitXpert.Service.AdminService;
 import com.tool.RecruitXpert.Service.JobService;
 import com.tool.RecruitXpert.Service.RecruiterService;
+import com.tool.RecruitXpert.Security.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -24,19 +29,49 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
-    private AdminService adminService;
-    @Autowired
-    private RecruiterService recruiterService;
-    @Autowired
-    private JobService jobService;
+    @Autowired private UserInfoService service;
+    @Autowired private JwtService jwtService;
+    @Autowired private AuthenticationManager authenticationManager;
+    @Autowired private AdminService adminService;
+    @Autowired private RecruiterService recruiterService;
+    @Autowired private JobService jobService;
+
+    @Autowired private UserInfoController userInfoController;
+
+
+    // here i just have to call the function userinfo madhun
+//    adn user info table madhe email and password save akra
+//    and call the login api from userInfo to get token that's how we got token '
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<?> adminSignUp(@RequestBody AdminSignUp signUpDto) {
+        try {
+            String response = adminService.adminSignUp(signUpDto);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/login")
+    public String adminAuthenticate(@RequestBody LogIn authRequest) {
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken
+                        (authRequest.getEmail(), authRequest.getPassword()));
+
+        if (authentication.isAuthenticated()) {
+            return jwtService.generateToken(authRequest.getEmail());
+        } else {
+            throw new UsernameNotFoundException("invalid user request !");
+        }
+    }
+
 
     @PostMapping("/jobCreation")
     public ResponseEntity createJob(@RequestBody JobCreationDTO jobCreationDTO) {
         String message = jobService.createJob(jobCreationDTO);
         return new ResponseEntity(message, HttpStatus.CREATED);
     }
-
 
     @PostMapping("/assign") // here get all list of recruiters for assign
     public ResponseEntity<?> getAllListOfRecruiters() {
@@ -62,40 +97,19 @@ public class AdminController {
     // ithe manage jobs cha endpoint yeil
 
 
-    @PostMapping("/sign-up")
-    public ResponseEntity<?> adminSignUp(@RequestBody AdminSignUp signUpDto) {
-        try {
-            String response = adminService.adminSignUp(signUpDto);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> adminSignIn(@RequestBody AdminSignUp loginDto) {
-        try {
-            String response = adminService.adminSignIn(loginDto);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            String response = "Incorrect organisation, email or password";
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-    }
-
     // addAdmin new admin
     @PostMapping("/register")
-    public ResponseEntity addAdmin(@RequestBody FormAdminDTO formAdminDTO) throws IOException {
+    public ResponseEntity<?> addAdmin(@RequestBody FormAdminDTO formAdminDTO) throws IOException {
         String message = adminService.addAdmin(formAdminDTO);
-        return new ResponseEntity(message, HttpStatus.CREATED);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
     // update
     //  ADMIN CAN UPDATE THE JOB ROLE AND DESCRIPTION
     @PutMapping("/update")
-    public ResponseEntity updateAdmin(@RequestBody UpdateAdminDTO adminRequest) throws IOException {
+    public ResponseEntity<?> updateAdmin(@RequestBody UpdateAdminDTO adminRequest) throws IOException {
         String message = adminService.updateAdmin(adminRequest);
-        return new ResponseEntity(message, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
     }
 
     //    show this list to admin home page whos status is not active.

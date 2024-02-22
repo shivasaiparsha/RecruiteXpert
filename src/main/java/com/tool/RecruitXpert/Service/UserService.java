@@ -33,8 +33,8 @@ public class UserService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public String signUp(SignUserDto signUp) throws Exception{
 
+    public String signUp(SignUserDto signUp) throws Exception{
 //        validation : check unique email
         boolean check = userRepository.existsByEmail(signUp.getEmail());
         if(check) throw new RuntimeException("Email already present");

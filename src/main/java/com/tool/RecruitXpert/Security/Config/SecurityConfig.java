@@ -1,8 +1,7 @@
 package com.tool.RecruitXpert.Security.Config;
 
-import com.tool.RecruitXpert.Security.Jwt.JwtAuthenticationEntryPoint;
-import com.tool.RecruitXpert.Security.Jwt.JwtAuthenticationFilter;
-import com.tool.RecruitXpert.Security.Mics.UserInfoUserDetailsService;
+import com.tool.RecruitXpert.Security.Jwt.JwtAuthFilter;
+import com.tool.RecruitXpert.Security.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,46 +13,53 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/*
 
-//        UserDetails admin = User.withUsername("Basant")
-//                .password(passwordEncoder().encode("Pwd1"))
-//                .roles("ADMIN")
-//                .build();
-//        UserDetails user = User.withUsername("John")
-//                .password(passwordEncoder().encode("Pwd1"))
-//                .roles("USER","ADMIN")
-//                .build();
-//        return new InMemoryUserDetailsManager(admin, user);
-* */
-
+@SuppressWarnings("removal")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
+
+    @Autowired
+    private JwtAuthFilter authFilter;
+
+    // User Creation
     @Bean
     public UserDetailsService userDetailsService() {
-        return new UserInfoUserDetailsService();
+        return new UserInfoService();
     }
 
+        // Configuring HttpSecurity
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers("/auth/welcome", "/auth/addNewUser",
+                        "/auth/login", "/admin/**").permitAll()
+                .and()
+                .authorizeHttpRequests().requestMatchers("/auth/user/**").authenticated()
+                .and()
+                .authorizeHttpRequests().requestMatchers("/auth/admin/**").authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    // Password Encoding
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
     }
 
     @Bean
@@ -63,4 +69,12 @@ public class SecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+
 }
