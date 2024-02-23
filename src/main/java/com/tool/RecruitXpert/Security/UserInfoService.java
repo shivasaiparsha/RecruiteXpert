@@ -28,12 +28,16 @@ public class UserInfoService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found " + email));
     }
 
-    public String addUser(UserInfo userInfo) {
-        Optional<UserInfo> user = repository.findByEmail(userInfo.getEmail());
+    public String addUser(UserInfoDto dto) {
+        Optional<UserInfo> user = repository.findByEmail(dto.getEmail());
 
         if(user.isPresent()) return "email is already present enter new email";
 
-        userInfo.setPassword(encoder.encode(userInfo.getPassword()));
+        UserInfo userInfo = new UserInfo();
+        userInfo.setName(dto.getName());
+        userInfo.setEmail(dto.getEmail());
+        userInfo.setRoles(dto.getRoles());
+        userInfo.setPassword(encoder.encode(dto.getPassword()));
         repository.save(userInfo);
         return "User Added Successfully";
     }

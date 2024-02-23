@@ -1,6 +1,6 @@
 package com.tool.RecruitXpert.Enums;
 
- public enum Role {
+ public enum EntityRoles {
      ADMIN,
      RECRUITER,
      USER

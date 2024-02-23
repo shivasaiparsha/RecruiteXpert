@@ -59,4 +59,9 @@ public class Admin {
     @OneToMany(mappedBy = "admin",cascade = CascadeType.ALL)
     List<Recruiter> recruiters = new ArrayList<>();
 
+    public Admin(String email, String organization, String adminRole) {
+        this.email = email;
+        this.organization = organization;
+        this.adminRole = adminRole;
+    }
 }

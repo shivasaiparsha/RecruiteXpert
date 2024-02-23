@@ -7,6 +7,7 @@ import com.tool.RecruitXpert.DTO.RecruiterDto.JobAssignDto;
 import com.tool.RecruitXpert.DTO.RecruiterDto.responseDto.AssignRecruiterResponse;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Security.Jwt.JwtService;
+import com.tool.RecruitXpert.Security.UserInfo;
 import com.tool.RecruitXpert.Security.UserInfoController;
 import com.tool.RecruitXpert.Service.AdminService;
 import com.tool.RecruitXpert.Service.JobService;
@@ -39,9 +40,7 @@ public class AdminController {
     @Autowired private UserInfoController userInfoController;
 
 
-    // here i just have to call the function userinfo madhun
-//    adn user info table madhe email and password save akra
-//    and call the login api from userInfo to get token that's how we got token '
+    // for login we have to call the userInfo login api so login is sorted.
 
     @PostMapping("/sign-up")
     public ResponseEntity<?> adminSignUp(@RequestBody AdminSignUp signUpDto) {
@@ -53,24 +52,10 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/login")
-    public String adminAuthenticate(@RequestBody LogIn authRequest) {
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken
-                        (authRequest.getEmail(), authRequest.getPassword()));
-
-        if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getEmail());
-        } else {
-            throw new UsernameNotFoundException("invalid user request !");
-        }
-    }
-
-
     @PostMapping("/jobCreation")
-    public ResponseEntity createJob(@RequestBody JobCreationDTO jobCreationDTO) {
+    public ResponseEntity<?> createJob(@RequestBody JobCreationDTO jobCreationDTO) {
         String message = jobService.createJob(jobCreationDTO);
-        return new ResponseEntity(message, HttpStatus.CREATED);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
     @PostMapping("/assign") // here get all list of recruiters for assign
@@ -152,7 +137,7 @@ public class AdminController {
     }
 
     @GetMapping("/dashboard/{id}")
-    public ResponseEntity adminDashboard(@PathVariable Long id) {
+    public ResponseEntity<?> adminDashboard(@PathVariable Long id) {
         try {
             AdminHomePageResponseDTO adminHomepageResponseDTO = adminService.adminDashboard(id);
             return new ResponseEntity<>(adminHomepageResponseDTO, HttpStatus.OK);
@@ -173,6 +158,6 @@ public class AdminController {
     public ResponseEntity<?> delete(@RequestParam Long id) {
         String message = adminService.deleteAdmin(id);
         return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
-    }
 
+    }
 }

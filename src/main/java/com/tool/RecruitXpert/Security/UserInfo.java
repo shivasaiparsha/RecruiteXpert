@@ -29,4 +29,10 @@ public class UserInfo {
         this.password = password;
         this.roles = roles;
     }
+
+    public UserInfo(String email, String password, String roles) {
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
 }

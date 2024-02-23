@@ -42,7 +42,7 @@ public class SecurityConfig {
         return http.csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/welcome", "/auth/addNewUser",
-                        "/auth/login", "/admin/**").permitAll()
+                        "/auth/login", "/admin/**", "/user/**", "/recruiter/**").permitAll()
                 .and()
                 .authorizeHttpRequests().requestMatchers("/auth/user/**").authenticated()
                 .and()

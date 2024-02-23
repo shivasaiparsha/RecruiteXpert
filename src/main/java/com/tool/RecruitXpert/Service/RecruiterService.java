@@ -10,11 +10,15 @@ import com.tool.RecruitXpert.DTO.RecruiterDto.UpdateRecruiterDto;
 import com.tool.RecruitXpert.DTO.RecruiterDto.responseDto.AssignRecruiterResponse;
 import com.tool.RecruitXpert.Entities.Admin;
 import com.tool.RecruitXpert.Entities.Recruiter;
+import com.tool.RecruitXpert.Enums.EntityRoles;
 import com.tool.RecruitXpert.Enums.Status;
 import com.tool.RecruitXpert.Repository.RecruiterRepository;
+import com.tool.RecruitXpert.Security.UserInfoDto;
+import com.tool.RecruitXpert.Security.UserInfoService;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,32 +31,40 @@ public class RecruiterService {
 
     @Autowired
     RecruiterRepository repository;
+    @Autowired private UserInfoService userInfoService;
 
     @Autowired
     private JavaMailSender mailSender;
 
+    @Autowired private PasswordEncoder passwordEncoder;
+
     // signup recruiter :
-    public String signUp(RecruiterSignUp signUp) throws Exception{
+    public String signUp(RecruiterSignUp dto) throws Exception{
 
 //        validation : check unique email
-        boolean check = repository.existsByEmail(signUp.getEmail());
-        if(check) throw new RuntimeException("Email already present");
+        boolean check = repository.existsByEmail(dto.getEmail());
+        if(check) throw new RuntimeException("Email already present, Enter valid email");
 
 //        check unique org
-        boolean uniqueOrg = repository.existsByOrganisation(signUp.getOrganisationName());
+        boolean uniqueOrg = repository.existsByOrganisation(dto.getOrganisationName());
         if(uniqueOrg) throw new RuntimeException("organization already present, Enter new one");
 
-        Recruiter recruiter = new Recruiter();
-        recruiter.setEmail(signUp.getEmail());
-        recruiter.setOrganisation(signUp.getOrganisationName());
-        recruiter.setPassword(signUp.getPassword());
+        Recruiter recruiter = new Recruiter(dto.getEmail(), dto.getOrganisationName(), EntityRoles.RECRUITER);
+        recruiter.setPassword(passwordEncoder.encode(dto.getPassword()));
         repository.save(recruiter);
+
+        UserInfoDto userStore = new UserInfoDto();
+        userStore.setEmail(dto.getEmail());
+        userStore.setPassword(dto.getPassword());
+        userStore.setName("-");
+        userStore.setRoles(EntityRoles.RECRUITER.name());
+        userInfoService.addUser(userStore);
         return "signup successfully";
     }
 
-    // login to recruiter ?: case : if recruiter approved then only he can able to access the portal
-    public String logIn(RecruiterSignUp login) throws Exception{
+//  reconsider it : implement 3 times wrong password feature in main login of userInfoService
 
+    public String logIn(RecruiterSignUp login) throws Exception{
         Recruiter recruiter = repository.findByEmail(login.getEmail());
 
         if(recruiter.getEmail().equals(login.getEmail()) &&
@@ -79,6 +91,7 @@ public class RecruiterService {
             recruiter.getPassword().equals(login.getPassword())) {
             return "successful login";
         }
+
         else {  // if wrong then each time we're increasing count
             int count = recruiter.getPasswordCount();
             recruiter.setPasswordCount(count + 1);

@@ -7,14 +7,18 @@ import com.tool.RecruitXpert.DTO.UserDTO.UserResponse;
 import com.tool.RecruitXpert.Entities.JobsApplication;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Entities.User;
+import com.tool.RecruitXpert.Enums.EntityRoles;
 import com.tool.RecruitXpert.Enums.Status;
 import com.tool.RecruitXpert.Exceptions.UserNotFoundException;
 import com.tool.RecruitXpert.Repository.JobRepository;
 import com.tool.RecruitXpert.Repository.UserRepository;
+import com.tool.RecruitXpert.Security.UserInfoDto;
+import com.tool.RecruitXpert.Security.UserInfoService;
 import com.tool.RecruitXpert.Transformer.UserTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
@@ -32,25 +36,36 @@ public class UserService {
 
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired private PasswordEncoder encoder;
+    @Autowired private UserInfoService userInfoService;
 
 
-    public String signUp(SignUserDto signUp) throws Exception{
+    public String signUp(SignUserDto dto) throws Exception{
 //        validation : check unique email
-        boolean check = userRepository.existsByEmail(signUp.getEmail());
-        if(check) throw new RuntimeException("Email already present");
+        boolean check = userRepository.existsByEmail(dto.getEmail());
+        if(check) throw new RuntimeException("Email already present, Enter valid email");
 
-        User user = new User(signUp.getEmail(), signUp.getPassword());
+        User user = new User(dto.getEmail(), encoder.encode(dto.getPassword()));
+        user.setEntityRoles(EntityRoles.USER);
         userRepository.save(user);
 
-        // email integration
-        SimpleMailMessage mailMessage=new SimpleMailMessage();
+        UserInfoDto userStore = new UserInfoDto();
+        userStore.setEmail(dto.getEmail());
+        userStore.setPassword(dto.getPassword());
+        userStore.setName("-");
+        userStore.setRoles(EntityRoles.USER.name());
+        userInfoService.addUser(userStore);
 
-        String body="Hi Welcome to RecruitXpert \n"+" Let's start your job search";
-        mailMessage.setSubject("RecruitXpert");
-        mailMessage.setFrom("shivasaiparsha@gmail.com");
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setText(body);
-        mailSender.send(mailMessage);
+//        // email integration
+//        SimpleMailMessage mailMessage = new SimpleMailMessage();
+//
+//        String body="Hi Welcome to RecruitXpert \n"+" Let's start your job search";
+//        mailMessage.setSubject("RecruitXpert");
+//        mailMessage.setFrom("shivasaiparsha@gmail.com");
+//        mailMessage.setTo(user.getEmail());
+//        mailMessage.setText(body);
+//        mailSender.send(mailMessage);
+
         return "signup successfully";
     }
 

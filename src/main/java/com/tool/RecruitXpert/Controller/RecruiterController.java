@@ -38,6 +38,8 @@ public class RecruiterController {
         }
     }
 
+
+    // remove this feature cause we're login via JWT
     @PostMapping("/login")
     public ResponseEntity<?> recruiterSignIn(@RequestBody RecruiterSignUp loginDto){
         try {
@@ -83,7 +85,7 @@ public class RecruiterController {
     }
 
     @GetMapping("/dashboard/{id}")
-    public ResponseEntity recruiterDashboard(@PathVariable int id){
+    public ResponseEntity<?> recruiterDashboard(@PathVariable int id){
         RecruiterHomepageResponseDTO recruiterHomepageResponseDTO = service.recruiterDashboard(id);
         return new ResponseEntity<>(recruiterHomepageResponseDTO,HttpStatus.ACCEPTED);
     }

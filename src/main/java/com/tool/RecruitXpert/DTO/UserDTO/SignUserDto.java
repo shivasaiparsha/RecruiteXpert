@@ -9,5 +9,4 @@ public class SignUserDto {
 
     private String email;
     private String password;
-
 }

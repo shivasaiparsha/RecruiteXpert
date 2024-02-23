@@ -1,5 +1,6 @@
 package com.tool.RecruitXpert.Entities;
 
+import com.tool.RecruitXpert.Enums.EntityRoles;
 import com.tool.RecruitXpert.Enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -55,6 +56,8 @@ public class User {
     @Enumerated(EnumType.STRING)
      Status status; // approved | denied | deactivate
 
+    @Enumerated(value = EnumType.STRING)
+    EntityRoles entityRoles; // admin, recruiter, user
 
 // this is recruiter - review - resume feature :
 //    for this we've to store user list in this recruiter and track each users status who is approved

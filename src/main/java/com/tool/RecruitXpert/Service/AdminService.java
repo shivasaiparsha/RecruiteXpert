@@ -8,7 +8,11 @@ import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Exceptions.AdminNotFoundException;
 import com.tool.RecruitXpert.Repository.AdminRepository;
 import com.tool.RecruitXpert.Repository.RecruiterRepository;
+import com.tool.RecruitXpert.Repository.UserInfoRepository;
+import com.tool.RecruitXpert.Security.UserInfo;
 import com.tool.RecruitXpert.Security.UserInfoController;
+import com.tool.RecruitXpert.Security.UserInfoDto;
+import com.tool.RecruitXpert.Security.UserInfoService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,18 +26,11 @@ import java.util.Optional;
 @Service
 public class AdminService{
 
-    @Autowired
-    private AdminRepository adminRepository;
-
-    @Autowired
-    private RecruiterRepository recruiterRepository;
-
-    @Autowired
-    private PasswordEncoder encoder;
-
-    @Autowired
-    ModelMapper modelMapper;
-
+    @Autowired private AdminRepository adminRepository;
+    @Autowired private RecruiterRepository recruiterRepository;
+    @Autowired private PasswordEncoder encoder;
+    @Autowired private UserInfoService userInfoService;
+    @Autowired ModelMapper modelMapper;
 
     public String addAdmin(FormAdminDTO formAdminDTO) throws IOException {
         Optional<Admin> optional = adminRepository.findById(formAdminDTO.getAdminId());
@@ -65,7 +62,6 @@ public class AdminService{
 
         adminRepository.save(admin);
         return "Successfully Updated !";
-
     }
 
     public String deleteAdmin(Long id) {
@@ -78,20 +74,24 @@ public class AdminService{
     }
 
 
-    public String adminSignUp(AdminSignUp signUp) throws Exception {
+    public String adminSignUp(AdminSignUp dto) throws Exception {
 //        validation : check unique email
-        boolean check = adminRepository.existsByEmail(signUp.getEmail());
-        if (check) throw new RuntimeException("Email already present");
+        boolean check = adminRepository.existsByEmail(dto.getEmail());
+        if (check) throw new RuntimeException("Email already present, Enter valid email");
 
 //        check unique org
-        boolean uniqueOrg = adminRepository.existsByOrganization(signUp.getOrganization());
+        boolean uniqueOrg = adminRepository.existsByOrganization(dto.getOrganization());
         if (uniqueOrg) throw new RuntimeException("organization already present, Enter new one");
 
-        Admin admin = new Admin();
-        admin.setEmail(signUp.getEmail());
-        admin.setOrganization(signUp.getOrganization());
-        admin.setPassword(encoder.encode(signUp.getPassword()));
-        admin.setAdminRole("ADMIN");
+        Admin admin = new Admin(dto.getEmail(), dto.getOrganization(), "ADMIN");
+        admin.setPassword(encoder.encode(dto.getPassword()));
+
+        UserInfoDto userStore = new UserInfoDto();
+        userStore.setEmail(dto.getEmail());
+        userStore.setPassword(dto.getPassword());
+        userStore.setName("-");
+        userStore.setRoles("ADMIN");
+        userInfoService.addUser(userStore);
         adminRepository.save(admin);
         return "signup successfully";
     }

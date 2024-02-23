@@ -1,5 +1,6 @@
 package com.tool.RecruitXpert.Entities;
 
+import com.tool.RecruitXpert.Enums.EntityRoles;
 import com.tool.RecruitXpert.Enums.RecruiterRoles;
 import com.tool.RecruitXpert.Enums.Status;
 import jakarta.persistence.*;
@@ -59,12 +60,11 @@ public class Recruiter {
     @Enumerated(value = EnumType.STRING)
     Status recruiterStatus; // approved | dis-approve = cannot access |
 
-//    Question : figure out here how recruiter is getting list of approved users by recruiter
-
-
     @Enumerated(value = EnumType.STRING)
     RecruiterRoles recruiterRole; // active | de-active
 
+    @Enumerated(value = EnumType.STRING)
+    EntityRoles entityRoles; // admin, recruiter, user
 
 //    // mapped for user to recruiter
 //    @OneToMany(mappedBy = "recruiter", cascade = CascadeType.ALL)
@@ -80,5 +80,11 @@ public class Recruiter {
         this.email = email;
         this.password = password;
         this.jobRole = jobRole;
+    }
+
+    public Recruiter(String organisation, String email, EntityRoles entityRoles) {
+        this.organisation = organisation;
+        this.email = email;
+        this.entityRoles = entityRoles;
     }
 }
