@@ -1,17 +1,16 @@
 package com.tool.RecruitXpert.Service;
 
 import com.tool.RecruitXpert.DTO.AdminDTO.UpdateRecruiterStatus;
-import com.tool.RecruitXpert.DTO.RecruiterDto.AddRecruiterDto;
+import com.tool.RecruitXpert.DTO.RecruiterDto.*;
 
-import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterSignUp;
-
-import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterHomepageResponseDTO;
-import com.tool.RecruitXpert.DTO.RecruiterDto.UpdateRecruiterDto;
 import com.tool.RecruitXpert.DTO.RecruiterDto.responseDto.AssignRecruiterResponse;
 import com.tool.RecruitXpert.Entities.Admin;
+import com.tool.RecruitXpert.Entities.JobsApplication;
 import com.tool.RecruitXpert.Entities.Recruiter;
+import com.tool.RecruitXpert.Entities.User;
 import com.tool.RecruitXpert.Enums.EntityRoles;
 import com.tool.RecruitXpert.Enums.Status;
+import com.tool.RecruitXpert.Repository.JobRepository;
 import com.tool.RecruitXpert.Repository.RecruiterRepository;
 import com.tool.RecruitXpert.Security.UserInfoDto;
 import com.tool.RecruitXpert.Security.UserInfoService;
@@ -35,7 +34,7 @@ public class RecruiterService {
 
     @Autowired
     private JavaMailSender mailSender;
-
+    @Autowired JobRepository jobRepository;
     @Autowired private PasswordEncoder passwordEncoder;
 
     // signup recruiter :
@@ -175,6 +174,24 @@ public class RecruiterService {
             returnList.add(assign);
         }
         return returnList;
+    }
+
+    public List<UserAppliedJobstoRecruiterDto> getListOfUsersAppliedToJob(long jobId) {
+
+        List<UserAppliedJobstoRecruiterDto> list = new ArrayList<>();
+        Optional<JobsApplication> op = jobRepository.findById(jobId);
+        List<User> userList = op.get().getUsersApplied();
+
+        for (User user : userList){
+            UserAppliedJobstoRecruiterDto userApplied = new UserAppliedJobstoRecruiterDto();
+            userApplied.setUserId(user.getUserId());
+            userApplied.setFirstName(user.getFirstName());
+            userApplied.setExperienceInYears(user.getExperienceInYears());
+            userApplied.setCurrentJobTitle(user.getCurrentJobTitle());
+
+            list.add(userApplied);
+        }
+        return list;
     }
 
     // recruiter can change the status of user like [commenter | reviewer | all actions ]

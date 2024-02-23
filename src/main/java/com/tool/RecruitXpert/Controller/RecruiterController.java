@@ -1,11 +1,9 @@
 package com.tool.RecruitXpert.Controller;
 
 import com.tool.RecruitXpert.DTO.AdminDTO.UpdateRecruiterStatus;
-import com.tool.RecruitXpert.DTO.RecruiterDto.AddRecruiterDto;
-import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterHomepageResponseDTO;
+import com.tool.RecruitXpert.DTO.RecruiterDto.*;
 
-import com.tool.RecruitXpert.DTO.RecruiterDto.RecruiterSignUp;
-import com.tool.RecruitXpert.DTO.RecruiterDto.UpdateRecruiterDto;
+import com.tool.RecruitXpert.Entities.JobsApplication;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Service.RecruiterService;
 import lombok.extern.slf4j.Slf4j;
@@ -77,5 +75,15 @@ public class RecruiterController {
         return new ResponseEntity<>(recruiterHomepageResponseDTO,HttpStatus.ACCEPTED);
     }
 
+
+    @GetMapping("/user-Lists-who-Applied-to-recruiter/{id}")
+    public ResponseEntity<?> getListOfUsersAppliedToJob(@PathVariable("id") long jobId) {
+        try {
+            List<UserAppliedJobstoRecruiterDto> list = service.getListOfUsersAppliedToJob(jobId);
+            return new ResponseEntity<>(list, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
 

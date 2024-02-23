@@ -1,9 +1,6 @@
 package com.tool.RecruitXpert.Service;
 
-import com.tool.RecruitXpert.DTO.UserDTO.SignUserDto;
-import com.tool.RecruitXpert.DTO.UserDTO.UpdateUserStatus;
-import com.tool.RecruitXpert.DTO.UserDTO.UserRequest;
-import com.tool.RecruitXpert.DTO.UserDTO.UserResponse;
+import com.tool.RecruitXpert.DTO.UserDTO.*;
 import com.tool.RecruitXpert.Entities.JobsApplication;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Entities.User;
@@ -69,32 +66,6 @@ public class UserService {
         return "signup successfully";
     }
 
-    public String logIn(SignUserDto login){
-        User user = userRepository.findByEmail(login.getEmail()).get();
-
-        if(user.getEmail().equals(login.getEmail()) &&
-                user.getPassword().equals(login.getPassword())){
-            user.setPasswordCount(0); // for each successful login setting count 0;
-            return "successful login";
-        }
-
-        if (user.isAccountBlock())
-            throw new RuntimeException("Oops! you're account is blocked! reach-out to Admin");
-
-        if(user.getPasswordCount() > 3){
-            user.setAccountBlock(true);
-            throw new RuntimeException("You've already done 3 wrong attempts, now " +
-                    "kindly reach-out to admin for further actions.");
-        }
-
-        else {  // if wrong then each time we're increasing count
-            int count = user.getPasswordCount();
-            user.setPasswordCount(count + 1);
-            return "Incorrect organisation, email or password";
-        }
-    }
-
-
     public UserResponse addUser(UserRequest userRequest) {
         User user = UserTransformer.UserRequestToUser(userRequest);
         User savedUser = userRepository.save(user);
@@ -158,14 +129,17 @@ public class UserService {
         return ans;
     }
 
-    public String jobAppliedByUser(long jobApplicationId, int userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public String jobAppliedByUser(JobApplyDto dto) {
+        User user = userRepository.findById(dto.getUserId()).get();
+        JobsApplication jobs = jobRepository.findById(dto.getJobId()).get();
 
-        JobsApplication jobs = jobRepository.findById(jobApplicationId).get();
-
-        User user = userOptional.get();
+        // we' also have to set each job in user's list
+        // and each user in job's list
         user.getJobsApplicationList().add(jobs);
         userRepository.save(user);
+
+        jobs.getUsersApplied().add(user);
+        jobRepository.save(jobs);
         return "Job applied successfully";
     }
 

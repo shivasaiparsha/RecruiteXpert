@@ -1,10 +1,7 @@
 package com.tool.RecruitXpert.Controller;
 
 
-import com.tool.RecruitXpert.DTO.UserDTO.SignUserDto;
-import com.tool.RecruitXpert.DTO.UserDTO.UpdateUserStatus;
-import com.tool.RecruitXpert.DTO.UserDTO.UserRequest;
-import com.tool.RecruitXpert.DTO.UserDTO.UserResponse;
+import com.tool.RecruitXpert.DTO.UserDTO.*;
 import com.tool.RecruitXpert.Entities.JobsApplication;
 import com.tool.RecruitXpert.Entities.User;
 import com.tool.RecruitXpert.Service.UserService;
@@ -26,11 +23,10 @@ public class UserController {
     private UserService userService;
 
     // apply jobs
-    @PutMapping("jobAppliedByUser")
-    public ResponseEntity<?> jobAppliedByUser(@PathVariable("jobId") long jobApplicationId,
-                                              @PathVariable("userId") int userId) {
+    @PutMapping("/job-apply")
+    public ResponseEntity<?> jobAppliedByUser(@RequestBody JobApplyDto dto) {
         try {
-            String response = userService.jobAppliedByUser(jobApplicationId, userId);
+            String response = userService.jobAppliedByUser(dto);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch(Exception e) {
@@ -46,17 +42,6 @@ public class UserController {
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> recruiterSignIn(@RequestBody SignUserDto loginDto) {
-        try {
-            String response = userService.logIn(loginDto);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            String response = "Incorrect email or password";
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 

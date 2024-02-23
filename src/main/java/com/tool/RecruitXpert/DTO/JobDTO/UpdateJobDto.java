@@ -1,5 +1,6 @@
 package com.tool.RecruitXpert.DTO.JobDTO;
 
+import com.tool.RecruitXpert.Enums.JobLocation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,9 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class UpdateJobDto {
-    String job_role;
+
+    Long jobId; // we're getting the job obj from here
+
+    String jobTitle;
     int vacancy;
     String jobDescription;
-    String CTC;
-    String location;
+    double experience;
+    long CTC;
+    JobLocation location;
 }

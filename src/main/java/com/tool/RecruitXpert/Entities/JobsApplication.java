@@ -1,5 +1,7 @@
 package com.tool.RecruitXpert.Entities;
 
+import com.tool.RecruitXpert.Enums.JobCategories;
+import com.tool.RecruitXpert.Enums.JobLocation;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,23 +15,27 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor @Data @Table
+@Builder
 public class JobsApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long jobid;
 
-    String jobrole; // web dev | ml | java dev
+    String jobTitle; // enter the job title ex : software dev
 
-    String newjobrole; // whenever recruiter inserts new role
+//    // set this each time when we set the job
+//    @Enumerated(EnumType.STRING)
+//    JobCategories jobCategory; // frontEnd backend, ML
 
-    String jobdescription;
+    @Column(name = "description")
+    String jobDescription;
 
     double experience;
 
-//    7LPA
-    String ctc;
+    long CTC;
 
-    String location;
+    @Enumerated(EnumType.STRING)
+    JobLocation location;
 
     int vacancies;
 
@@ -45,4 +51,13 @@ public class JobsApplication {
 
     // i think i've to create an ManyToOne mapping for jobs - to - user here
 
+
+    public JobsApplication(String jobTitle, String jobDescription, double experience, long CTC, JobLocation location, int vacancies) {
+        this.jobTitle = jobTitle;
+        this.jobDescription = jobDescription;
+        this.experience = experience;
+        this.CTC = CTC;
+        this.location = location;
+        this.vacancies = vacancies;
+    }
 }
