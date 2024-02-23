@@ -38,19 +38,6 @@ public class RecruiterController {
         }
     }
 
-
-    // remove this feature cause we're login via JWT
-    @PostMapping("/login")
-    public ResponseEntity<?> recruiterSignIn(@RequestBody RecruiterSignUp loginDto){
-        try {
-            String response = service.logIn(loginDto);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            String response = "Incorrect organisation, email or password";
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @PostMapping("/register")
     public ResponseEntity<?> addRecruiter(@RequestBody AddRecruiterDto dto) {
         try {

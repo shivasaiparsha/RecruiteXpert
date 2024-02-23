@@ -23,6 +23,10 @@ public class UserInfo {
     
     private String roles;
 
+    int passwordCount; // checking for passwords should be < 4 times
+
+    boolean accountBlock;
+
     public UserInfo(String name, String email, String password, String roles) {
         this.name = name;
         this.email = email;

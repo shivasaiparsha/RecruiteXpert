@@ -62,43 +62,6 @@ public class RecruiterService {
         return "signup successfully";
     }
 
-//  reconsider it : implement 3 times wrong password feature in main login of userInfoService
-
-    public String logIn(RecruiterSignUp login) throws Exception{
-        Recruiter recruiter = repository.findByEmail(login.getEmail());
-
-        if(recruiter.getEmail().equals(login.getEmail()) &&
-                recruiter.getPassword().equals(login.getPassword())){
-            recruiter.setPasswordCount(0); // for each successful login setting count 0;
-            return "successful login";
-        }
-
-        if (recruiter.isAccountBlock())
-            throw new RuntimeException("Oops! you're account is blocked! reach-out to Admin");
-
-        if(recruiter.getPasswordCount() > 3){
-            recruiter.setAccountBlock(true);
-            throw new RuntimeException("You've already done 3 wrong attempts, now " +
-                    "kindly reach-out to admin for further actions.");
-        }
-
-       // case : if status is disapproved in that case
-        if(recruiter.getRecruiterStatus().equals(Status.DISAPPROVED))
-            return "Oops! you don't have permission to access, kindly reachOut to Admin.";
-
-        if(recruiter.getEmail().equals(login.getEmail()) &&
-                recruiter.getOrganisation().equals(login.getOrganisationName()) &&
-            recruiter.getPassword().equals(login.getPassword())) {
-            return "successful login";
-        }
-
-        else {  // if wrong then each time we're increasing count
-            int count = recruiter.getPasswordCount();
-            recruiter.setPasswordCount(count + 1);
-            return "Incorrect organisation, email or password";
-        }
-    }
-
     // add recruiter
     public String addRecruiter(AddRecruiterDto dto) throws Exception {
 

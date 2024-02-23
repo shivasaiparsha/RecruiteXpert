@@ -17,7 +17,6 @@ public class JobController {
     @Autowired
     private JobService jobService;
 
-
     // here we're just showing all the job list for user to apply
     @GetMapping("/showAllJobList")
     public ResponseEntity<?> findAllJobList(){

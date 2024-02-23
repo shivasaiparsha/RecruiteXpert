@@ -1,5 +1,7 @@
 package com.tool.RecruitXpert.Security;
 
+import com.tool.RecruitXpert.Enums.Status;
+import com.tool.RecruitXpert.Repository.UserInfoRepository;
 import com.tool.RecruitXpert.Security.Config.AuthRequest;
 import com.tool.RecruitXpert.Security.Jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/auth")
 public class UserInfoController {
@@ -21,6 +25,7 @@ public class UserInfoController {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired private UserInfoRepository repository;
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -34,15 +39,33 @@ public class UserInfoController {
         }
     }
 
+
     @PostMapping("/login")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken
-                        (authRequest.getEmail(), authRequest.getPassword()));
+    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) throws Exception {
+
+        UserInfo user = repository.findByEmail(authRequest.getEmail()).get();
+
+        Authentication authentication = authenticationManager.authenticate
+        (new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 
         if (authentication.isAuthenticated()) {
+            // for each successful login setting count 0;
+            user.setPasswordCount(0);
             return jwtService.generateToken(authRequest.getEmail());
-        } else {
+        }
+
+        if (user.isAccountBlock())
+            throw new RuntimeException("Oops! you're account is blocked! reach-out to Admin");
+
+        if(user.getPasswordCount() > 3){
+            user.setAccountBlock(true);
+            throw new RuntimeException("You've already done 3 wrong attempts, now " +
+                    "kindly reach-out to admin for further actions.");
+        }
+
+        else {
+            int count = user.getPasswordCount();
+            user.setPasswordCount(count + 1);
             throw new UsernameNotFoundException("invalid user request !");
         }
     }

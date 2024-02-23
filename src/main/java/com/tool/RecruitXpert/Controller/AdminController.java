@@ -17,9 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -41,7 +38,6 @@ public class AdminController {
 
 
     // for login we have to call the userInfo login api so login is sorted.
-
     @PostMapping("/sign-up")
     public ResponseEntity<?> adminSignUp(@RequestBody AdminSignUp signUpDto) {
         try {
@@ -52,11 +48,23 @@ public class AdminController {
         }
     }
 
+
     @PostMapping("/jobCreation")
     public ResponseEntity<?> createJob(@RequestBody JobCreationDTO jobCreationDTO) {
         String message = jobService.createJob(jobCreationDTO);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
+
+
+//    // get all list of jobs which is created by admin
+//    response : id , job roles
+
+
+    // 2nd api : as parameter UI se : job role id,
+//    update all those filed
+
+
+
 
     @PostMapping("/assign") // here get all list of recruiters for assign
     public ResponseEntity<?> getAllListOfRecruiters() {
