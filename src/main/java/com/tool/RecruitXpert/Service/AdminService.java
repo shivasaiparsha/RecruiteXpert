@@ -3,10 +3,13 @@ package com.tool.RecruitXpert.Service;
 
 import com.tool.RecruitXpert.DTO.AdminDTO.*;
 import com.tool.RecruitXpert.DTO.RecruiterDto.JobAssignDto;
+import com.tool.RecruitXpert.DTO.RecruiterDto.responseDto.JobTitleList;
 import com.tool.RecruitXpert.Entities.Admin;
+import com.tool.RecruitXpert.Entities.JobsApplication;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Exceptions.AdminNotFoundException;
 import com.tool.RecruitXpert.Repository.AdminRepository;
+import com.tool.RecruitXpert.Repository.JobRepository;
 import com.tool.RecruitXpert.Repository.RecruiterRepository;
 import com.tool.RecruitXpert.Repository.UserInfoRepository;
 import com.tool.RecruitXpert.Security.UserInfo;
@@ -20,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -30,6 +35,7 @@ public class AdminService{
     @Autowired private RecruiterRepository recruiterRepository;
     @Autowired private PasswordEncoder encoder;
     @Autowired private UserInfoService userInfoService;
+    @Autowired private JobRepository jobRepository;
     @Autowired ModelMapper modelMapper;
 
     public String addAdmin(FormAdminDTO formAdminDTO) throws IOException {
@@ -148,5 +154,19 @@ public class AdminService{
     }
 
 
+    public List<JobTitleList> getJobList() {
+
+        List<JobTitleList> list = new ArrayList<>();
+        List<JobsApplication> applicationList = jobRepository.findAll();
+
+        for (JobsApplication jobsApplication : applicationList){
+            JobTitleList jobTitleList = new JobTitleList();
+            jobTitleList.setJobId(jobsApplication.getJobid());
+            jobTitleList.setJobTitle(jobsApplication.getJobTitle());
+
+            list.add(jobTitleList);
+        }
+        return list;
+    }
 }
 

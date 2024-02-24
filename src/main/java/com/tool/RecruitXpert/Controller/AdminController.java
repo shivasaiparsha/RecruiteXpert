@@ -5,6 +5,8 @@ import com.tool.RecruitXpert.DTO.JobDTO.JobCreationDTO;
 import com.tool.RecruitXpert.DTO.LogIn.LogIn;
 import com.tool.RecruitXpert.DTO.RecruiterDto.JobAssignDto;
 import com.tool.RecruitXpert.DTO.RecruiterDto.responseDto.AssignRecruiterResponse;
+import com.tool.RecruitXpert.DTO.RecruiterDto.responseDto.JobTitleList;
+import com.tool.RecruitXpert.Entities.JobsApplication;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Security.Jwt.JwtService;
 import com.tool.RecruitXpert.Security.UserInfo;
@@ -27,14 +29,21 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired private UserInfoService service;
-    @Autowired private JwtService jwtService;
-    @Autowired private AuthenticationManager authenticationManager;
-    @Autowired private AdminService adminService;
-    @Autowired private RecruiterService recruiterService;
-    @Autowired private JobService jobService;
+    @Autowired
+    private UserInfoService service;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private AdminService adminService;
+    @Autowired
+    private RecruiterService recruiterService;
+    @Autowired
+    private JobService jobService;
 
-    @Autowired private UserInfoController userInfoController;
+    @Autowired
+    private UserInfoController userInfoController;
 
 
     // for login we have to call the userInfo login api so login is sorted.
@@ -62,8 +71,6 @@ public class AdminController {
 
     // 2nd api : as parameter UI se : job role id,
 //    update all those filed
-
-
 
 
     @PostMapping("/assign") // here get all list of recruiters for assign
@@ -166,6 +173,17 @@ public class AdminController {
     public ResponseEntity<?> delete(@RequestParam Long id) {
         String message = adminService.deleteAdmin(id);
         return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
-
     }
+
+    // list of joblist created by admin : 11.20
+    @GetMapping("/getJobList")
+    public ResponseEntity<?> getJobList() {
+        try {
+            List<JobTitleList> list = adminService.getJobList();
+            return new ResponseEntity<>(list, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.ACCEPTED);
+        }
+    }
+
 }
