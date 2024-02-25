@@ -20,5 +20,5 @@ public class UpdateJobDto {
     String jobDescription;
     double experience;
     long CTC;
-    JobLocation location;
+    String location;
 }

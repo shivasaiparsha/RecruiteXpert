@@ -74,6 +74,10 @@ public class Recruiter {
     @JoinColumn
     Admin admin;
 
+    @OneToOne(mappedBy = "recruiter", cascade = CascadeType.ALL)
+    private JobsApplication jobsApplication;
+
+
     public Recruiter(String firstname, String lastname, String email, String password, String jobRole) {
         this.firstname = firstname;
         this.lastname = lastname;
@@ -82,9 +86,9 @@ public class Recruiter {
         this.jobRole = jobRole;
     }
 
-    public Recruiter(String organisation, String email, EntityRoles entityRoles) {
-        this.organisation = organisation;
+    public Recruiter( String email, String organisation, EntityRoles entityRoles) {
         this.email = email;
+        this.organisation = organisation;
         this.entityRoles = entityRoles;
     }
 }

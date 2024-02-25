@@ -2,6 +2,7 @@ package com.tool.RecruitXpert.Controller;
 
 import com.tool.RecruitXpert.DTO.AdminDTO.*;
 import com.tool.RecruitXpert.DTO.JobDTO.JobCreationDTO;
+import com.tool.RecruitXpert.DTO.JobDTO.UpdateJobDto;
 import com.tool.RecruitXpert.DTO.LogIn.LogIn;
 import com.tool.RecruitXpert.DTO.RecruiterDto.JobAssignDto;
 import com.tool.RecruitXpert.DTO.RecruiterDto.responseDto.AssignRecruiterResponse;
@@ -15,11 +16,13 @@ import com.tool.RecruitXpert.Service.AdminService;
 import com.tool.RecruitXpert.Service.JobService;
 import com.tool.RecruitXpert.Service.RecruiterService;
 import com.tool.RecruitXpert.Security.UserInfoService;
+import org.apache.regexp.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.service.annotation.DeleteExchange;
 
 import java.io.IOException;
 
@@ -65,23 +68,6 @@ public class AdminController {
     }
 
 
-//    // get all list of jobs which is created by admin
-//    response : id , job roles
-
-
-    // 2nd api : as parameter UI se : job role id,
-//    update all those filed
-
-
-    @PostMapping("/assign") // here get all list of recruiters for assign
-    public ResponseEntity<?> getAllListOfRecruiters() {
-        try {
-            List<AssignRecruiterResponse> responses = recruiterService.getAllListOfRecruiters();
-            return new ResponseEntity<>(responses, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
 
     // set enums here for status
     @PutMapping("/JobAssigned-toRecruiter")
@@ -93,9 +79,6 @@ public class AdminController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
-    // ithe manage jobs cha endpoint yeil
-
 
     // addAdmin new admin
     @PostMapping("/register")
@@ -124,7 +107,7 @@ public class AdminController {
         }
     }
 
-    @PutMapping("/approve")
+    @PutMapping("/update-status")
     public ResponseEntity<?> returnReturnStatus(@RequestBody UpdateRecruiterStatus update) {
         try {
             String response = recruiterService.updateStatus(update);
@@ -145,11 +128,13 @@ public class AdminController {
     }
 
     // delete profile by id
-    @DeleteMapping("/delete-admin")
-    public ResponseEntity<?> deleteAdmin(@RequestParam Long id) {
+    @DeleteMapping("/delete-admin/{id}")
+    public ResponseEntity<?> deleteAdmin(@PathVariable Long id) {
         String message = adminService.deleteAdmin(id);
         return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
     }
+
+
 
     @GetMapping("/dashboard/{id}")
     public ResponseEntity<?> adminDashboard(@PathVariable Long id) {
@@ -161,21 +146,15 @@ public class AdminController {
         }
     }
 
-    // delete job by id
-    @DeleteMapping("/deleteJob")
-    public ResponseEntity<?> deleteJob(@RequestParam Long jobId) {
-        String message = adminService.deleteJob(jobId);
-        return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
-    }
 
     // update job by id
-    @PutMapping("/deleteProfile")
-    public ResponseEntity<?> delete(@RequestParam Long id) {
+    @PutMapping("/deleteProfile/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         String message = adminService.deleteAdmin(id);
         return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
     }
 
-    // list of joblist created by admin : 11.20
+    // list of jobList created by admin : 11.20
     @GetMapping("/getJobList")
     public ResponseEntity<?> getJobList() {
         try {
@@ -184,6 +163,47 @@ public class AdminController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.ACCEPTED);
         }
+    }
+
+    // might delete this api  : but first see the usage
+    @PostMapping("/assign") // here get all list of recruiters for assign
+    public ResponseEntity<?> getAllListOfRecruiters() {
+        try {
+            List<AssignRecruiterResponse> responses = recruiterService.getAllListOfRecruiters();
+            return new ResponseEntity<>(responses, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/updateRole/{jobId}") // here we're getting the job object for update
+    public ResponseEntity<?> updateRole(@PathVariable long jobId) {
+        try {
+            JobsApplication list = adminService.updateRole(jobId);
+            return new ResponseEntity<>(list, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.ACCEPTED);
+        }
+    }
+
+    @DeleteMapping("/delete-recruiter/{id}")
+    public ResponseEntity<?> deleteRecruiterById(@PathVariable("id") int recruiterId){
+        String msg = adminService.deleteRecruiterById(recruiterId);
+        return new ResponseEntity<>(msg, HttpStatus.OK);
+    }
+
+    //check this and correct this :  delete job by id
+    @DeleteMapping("/deleteJob")
+    public ResponseEntity<?> deleteJob(@RequestParam Long jobId) {
+        String message = adminService.deleteJob(jobId);
+        return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+    }
+
+    // assign roles to recruiter
+    @PutMapping("/assignJobRole/{recruiterId}/{jobId}")
+    public ResponseEntity<?> assignJobRole(@PathVariable int recruiterId, @PathVariable long jobId){
+        String msg = adminService.assignJobRole(recruiterId, jobId);
+        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
 }

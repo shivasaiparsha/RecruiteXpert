@@ -2,6 +2,8 @@ package com.tool.RecruitXpert.Service;
 
 
 import com.tool.RecruitXpert.DTO.AdminDTO.*;
+import com.tool.RecruitXpert.DTO.JobDTO.JobCreationDTO;
+import com.tool.RecruitXpert.DTO.JobDTO.UpdateJobDto;
 import com.tool.RecruitXpert.DTO.RecruiterDto.JobAssignDto;
 import com.tool.RecruitXpert.DTO.RecruiterDto.responseDto.JobTitleList;
 import com.tool.RecruitXpert.Entities.Admin;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -149,7 +152,7 @@ public class AdminService{
     }
 
     public String deleteJob(Long jobId) {
-
+        jobRepository.deleteById(jobId);
         return "job deleted successfully";
     }
 
@@ -167,6 +170,29 @@ public class AdminService{
             list.add(jobTitleList);
         }
         return list;
+    }
+
+    public JobsApplication updateRole(long jobId) {
+        Optional<JobsApplication> op = jobRepository.findById(jobId);
+        return op.get();
+    }
+
+    public String deleteRecruiterById(int recruiterId) {
+        recruiterRepository.deleteById(recruiterId);
+        return "recruiter deleted successfully";
+    }
+
+
+    public String assignJobRole(int recruiterId, long jobId) {
+        JobsApplication jobOptional = jobRepository.findById(jobId).get();
+        Recruiter recruiterOptional = recruiterRepository.findById(recruiterId).get();
+
+        recruiterOptional.setJobsApplication(jobOptional);
+        recruiterRepository.save(recruiterOptional);
+
+        jobOptional.setRecruiter(recruiterOptional);
+        jobRepository.save(jobOptional);
+        return "job assigned successfully";
     }
 }
 

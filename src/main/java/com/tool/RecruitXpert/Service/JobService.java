@@ -38,7 +38,8 @@ public class JobService {
         job.setJobTitle(dto.getJobTitle()); job.setVacancies(dto.getVacancy());
         job.setJobDescription(dto.getJobDescription());
         job.setExperience(dto.getExperience());
-        job.setCTC(dto.getCTC()); job.setLocation(dto.getLocation());
+        job.setCTC(dto.getCTC());
+        job.setLocation(dto.getLocation());
         jobRepository.save(job);
         return "you're job is up-to date";
     }

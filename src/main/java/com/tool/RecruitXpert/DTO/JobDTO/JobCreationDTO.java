@@ -19,6 +19,6 @@ public class JobCreationDTO {
     String jobDescription;
     double experience;
     long CTC;
-    JobLocation location;
+    String location;
 
 }

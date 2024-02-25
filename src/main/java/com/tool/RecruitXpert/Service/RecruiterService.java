@@ -135,19 +135,18 @@ public class RecruiterService {
 
         Recruiter recruiter = op.get();
         recruiter.setRecruiterStatus(status.getRecruiterStatus());
-
-        // adminController me email integration - status return karna direct email me
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        String msg = "Hi Welcome to Recruit Expert portal! "+"\n get placed with our recruiters.";
-        String body1 = msg + "\n Admin updated you're profiles status to : " + status.getRecruiterStatus();
-        mailMessage.setSubject("Recruit Xpert");
-        mailMessage.setFrom("shivasaiparsha@gmail.com");
-        mailMessage.setTo(recruiter.getEmail());
-        mailMessage.setText(body1);
-        mailSender.send(mailMessage);
-
         repository.save(recruiter);
         return "Status updated successful";
+
+    // adminController me email integration - status return karna direct email me
+//        SimpleMailMessage mailMessage = new SimpleMailMessage();
+//        String msg = "Hi Welcome to Recruit Expert portal! "+"\n get placed with our recruiters.";
+//        String body1 = msg + "\n Admin updated you're profiles status to : " + status.getRecruiterStatus();
+//        mailMessage.setSubject("Recruit Xpert");
+//        mailMessage.setFrom("shivasaiparsha@gmail.com");
+//        mailMessage.setTo(recruiter.getEmail());
+//        mailMessage.setText(body1);
+//        mailSender.send(mailMessage);
     }
 
     // getting the list who is approved

@@ -34,8 +34,7 @@ public class JobsApplication {
 
     long CTC;
 
-    @Enumerated(EnumType.STRING)
-    JobLocation location;
+    String location;
 
     int vacancies;
 
@@ -49,10 +48,11 @@ public class JobsApplication {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     List<User> usersApplied = new ArrayList<>();
 
-    // i think i've to create an ManyToOne mapping for jobs - to - user here
 
+    @OneToOne @JoinColumn
+    Recruiter recruiter;
 
-    public JobsApplication(String jobTitle, String jobDescription, double experience, long CTC, JobLocation location, int vacancies) {
+    public JobsApplication(String jobTitle, String jobDescription, double experience, long CTC, String location, int vacancies) {
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
         this.experience = experience;
