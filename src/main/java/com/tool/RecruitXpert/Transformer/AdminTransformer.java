@@ -11,11 +11,8 @@ public class AdminTransformer {
     public static Admin AdminRequestToAdmin(FormAdminDTO formAdminDTO) throws IOException {
         return Admin.builder()
                 .firstname(formAdminDTO.getFirstname())
-                .lastname(formAdminDTO.getLastname())
                 .adminRole(formAdminDTO.getRole())
                 .adminImg(formAdminDTO.getAdminImg().getBytes())
-                .address(formAdminDTO.getAddress())
-                .location(formAdminDTO.getLocation())
                 .companyName(formAdminDTO.getCompanyName())
                 .website(formAdminDTO.getWebsite())
                 .adminRole((formAdminDTO.getRole()))

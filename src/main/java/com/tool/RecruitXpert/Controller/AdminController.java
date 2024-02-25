@@ -1,6 +1,7 @@
 package com.tool.RecruitXpert.Controller;
 
 import com.tool.RecruitXpert.DTO.AdminDTO.*;
+import com.tool.RecruitXpert.DTO.AdminDTO.ResponseDto.GetAdminUpdateProfile;
 import com.tool.RecruitXpert.DTO.JobDTO.JobCreationDTO;
 import com.tool.RecruitXpert.DTO.JobDTO.UpdateJobDto;
 import com.tool.RecruitXpert.DTO.LogIn.LogIn;
@@ -16,13 +17,11 @@ import com.tool.RecruitXpert.Service.AdminService;
 import com.tool.RecruitXpert.Service.JobService;
 import com.tool.RecruitXpert.Service.RecruiterService;
 import com.tool.RecruitXpert.Security.UserInfoService;
-import org.apache.regexp.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.service.annotation.DeleteExchange;
 
 import java.io.IOException;
 
@@ -68,7 +67,6 @@ public class AdminController {
     }
 
 
-
     // set enums here for status
     @PutMapping("/JobAssigned-toRecruiter")
     public ResponseEntity<?> jobAssigned(@RequestBody JobAssignDto status) {
@@ -80,23 +78,23 @@ public class AdminController {
         }
     }
 
-    // addAdmin new admin
-    @PostMapping("/register")
-    public ResponseEntity<?> addAdmin(@RequestBody FormAdminDTO formAdminDTO) throws IOException {
-        String message = adminService.addAdmin(formAdminDTO);
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
-    }
-
-    // update
-    //  ADMIN CAN UPDATE THE JOB ROLE AND DESCRIPTION
-    @PutMapping("/update")
+    // update admin profile
+    @PutMapping("/update-admin")
     public ResponseEntity<?> updateAdmin(@RequestBody UpdateAdminDTO adminRequest) throws IOException {
         String message = adminService.updateAdmin(adminRequest);
         return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
     }
 
+    // whenever we hit this api so we get all the details of admin that we wanted to update
+    @GetMapping("my-profile/{adminId}")
+    public ResponseEntity<?> getAdminDetails(@PathVariable Long adminId) {
+        GetAdminUpdateProfile message = adminService.getAdminDetails(adminId);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+
     //    show this list to admin home page whos status is not active.
-//    return the list whos recruiter status == null;
+    //    return the list whos recruiter status == null;
     @GetMapping("/recruiter/listOfRecruitersByStatus")
     public ResponseEntity<?> returnReturnStatus() {
         try {
@@ -133,7 +131,6 @@ public class AdminController {
         String message = adminService.deleteAdmin(id);
         return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
     }
-
 
 
     @GetMapping("/dashboard/{id}")
@@ -187,7 +184,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/delete-recruiter/{id}")
-    public ResponseEntity<?> deleteRecruiterById(@PathVariable("id") int recruiterId){
+    public ResponseEntity<?> deleteRecruiterById(@PathVariable("id") int recruiterId) {
         String msg = adminService.deleteRecruiterById(recruiterId);
         return new ResponseEntity<>(msg, HttpStatus.OK);
     }
@@ -201,7 +198,7 @@ public class AdminController {
 
     // assign roles to recruiter
     @PutMapping("/assignJobRole/{recruiterId}/{jobId}")
-    public ResponseEntity<?> assignJobRole(@PathVariable int recruiterId, @PathVariable long jobId){
+    public ResponseEntity<?> assignJobRole(@PathVariable int recruiterId, @PathVariable long jobId) {
         String msg = adminService.assignJobRole(recruiterId, jobId);
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }

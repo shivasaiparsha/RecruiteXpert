@@ -31,6 +31,9 @@ public class Admin {
     String email;
 
     String password;
+    String expectedCTC;
+
+    String adminJobRole; // this variable stores admins job role
 
     // we've to check if this is admin-role
     // then only we'll provide all the admin access

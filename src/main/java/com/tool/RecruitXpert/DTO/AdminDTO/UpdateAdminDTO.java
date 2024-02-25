@@ -11,19 +11,14 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class UpdateAdminDTO {
 
-    long adminId;
+    Long adminId;
 
-    String firstname;
-
-    String lastname;
-
-    String address;
+    String username;
+    String expectedCTC;
+    String expectedJobRole;
+    String location;
 
     String website;
-
-    MultipartFile adminImg;
-
-//    String adminImg;
 
     String companyName;
 

@@ -1,0 +1,12 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: careningra@gmail.com
+    password: dxfc oebr nszx ilcj
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

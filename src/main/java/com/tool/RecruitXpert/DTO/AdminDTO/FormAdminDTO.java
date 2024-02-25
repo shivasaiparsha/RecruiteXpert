@@ -16,11 +16,7 @@ public class FormAdminDTO {
 
     String firstname;
 
-    String lastname;
-
-    String address;
-
-    String location;
+    String expectedCTC;
 
     String website;
 
