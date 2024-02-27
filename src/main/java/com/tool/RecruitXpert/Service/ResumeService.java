@@ -45,19 +45,19 @@ public class ResumeService {
         long sizeInBytes = file.getSize(); // Getting size of the uploaded file in bytes
 
 
-        long sizeInKb=sizeInBytes/1024;
+        long sizeInKb=sizeInBytes/1024; // converting byte to kilobyte
         long sizeInMb = sizeInBytes /2048; // Converting bytes to megabyte
         long lowBound=50;
         long upperBound=1; // 1mb size
         if(sizeInKb<50) {
             log.error("resume size is less than  50kb log");
-            throw new Exception("uploaded Resume doc size"+ sizeInKb +"KB is lessthan required size"+ lowBound);
+            throw new Exception("uploaded Resume doc size "+ sizeInKb +" KB is lessthan required size "+ lowBound);
         }
 
 
         if(sizeInMb>upperBound) {
             log.error("resume size is greater than  1mb log");
-            throw new Exception("uploaded image size"+sizeInMb+"MB is greaterthan required size"+upperBound);
+            throw new Exception("uploaded image size "+sizeInMb+" MB is greaterthan required size "+upperBound+" MB");
         }
 
         ResumeEntity imageData = resumeRepository.save(ResumeEntity.builder()
@@ -79,7 +79,7 @@ public class ResumeService {
         Optional<ResumeEntity> resumeList = resumeRepository.findById(id);
         byte[] images = resumeList.get().getImageData();
 
-        String typearray[] = resumeList.get().getDocType().split("/");
+        String typearray[] = resumeList.get().getDocType().split("/"); // here
         String type = typearray[1];
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -87,7 +87,7 @@ public class ResumeService {
     }
 
     // send list of resumes from this
-    public List<ResponseForResumeName> showResume(int userId) {
+    public List<ResponseForResumeName> showResume(int userId) throws Exception{
 
         Optional<User> op = userRepository.findById(userId);
         User user = op.get();
@@ -144,7 +144,7 @@ public class ResumeService {
 
         userRepository.save(user);
 
-        return "resume updated successfully";
+        return "resume version set successfully";
     }
 
 

@@ -235,6 +235,7 @@ public class AdminService {
         if(s.length>=1&&s[1].equals("pdf")) throw new Exception("file format does't support");
 
         admin.setAdminImg(imageFile.getBytes());
+        adminRepository.save(admin);
         return "image uploaded successfully";
 
     }

@@ -19,7 +19,6 @@ import java.util.List;
 @RequestMapping("/resume")
 @Slf4j
 @CrossOrigin(origins = "https://blue-arda-82.tiiny.site/")
-
 public class ResumeController {
 
     @Autowired
@@ -28,16 +27,7 @@ public class ResumeController {
     @Autowired
     ResumeUtilities resumeUtilities;
 
-    // setting current versioning
-    @PutMapping("/setCurrentVersion/{resumeID}")
-    public ResponseEntity<?> versionControlMethod(@PathVariable int resumeId) {
-        try {
-            String response = resumeService.versionControlMethod(resumeId);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
-        }
-    }
+
 
     // upload resume by specific user
     @PostMapping("/upload")
@@ -53,9 +43,12 @@ public class ResumeController {
             throw new IOException(e.getMessage());
         }
         catch (Exception e){
-            return new ResponseEntity<>("Resume size is exceed > 1 mb", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    // setting current versioning
+
 
     // view resume by id
     @GetMapping("/viewResumes/{resumeid}")
@@ -66,6 +59,16 @@ public class ResumeController {
         catch (Exception e) {
             String error = ("resume with " + resumeid + " not found : " + e.getMessage());
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/setCurrentVersion/{resumeID}")
+    public ResponseEntity<?> versionControlMethod(@PathVariable int resumeId) {
+        try {
+            String response = resumeService.versionControlMethod(resumeId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
     }
 
@@ -87,7 +90,7 @@ public class ResumeController {
             resumeService.deleteResumeByResumeId(resumeid);
         } catch (Exception e) {
             log.error("resumeId not found");
-            throw new RuntimeException(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("file deleted successfully", HttpStatus.OK);
     }
@@ -99,7 +102,9 @@ public class ResumeController {
              String message = resumeService.deleteAllResumesByUserId(userId);
              return new ResponseEntity<>(message, HttpStatus.OK);
          }
-         catch (Exception e){ throw new Exception(e.getMessage()); }
+         catch (Exception e){
+             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+         }
     }
 
 }
