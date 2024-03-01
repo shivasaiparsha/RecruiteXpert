@@ -46,7 +46,7 @@ public class RecruiterService {
 
 //        check unique org
         boolean uniqueOrg = repository.existsByOrganisation(dto.getOrganisationName());
-        if(uniqueOrg) throw new RuntimeException("organization already present, Enter new one");
+//        if(uniqueOrg) throw new RuntimeException("organization already present, Enter new one");
 
         Recruiter recruiter = new Recruiter(dto.getEmail(), dto.getOrganisationName(), EntityRoles.RECRUITER);
         recruiter.setPassword(passwordEncoder.encode(dto.getPassword()));

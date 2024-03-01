@@ -1,5 +1,6 @@
 package com.tool.RecruitXpert.Security;
 
+import com.tool.RecruitXpert.DTO.SignUp.ResponseJWT;
 import com.tool.RecruitXpert.Enums.Status;
 import com.tool.RecruitXpert.Repository.UserInfoRepository;
 import com.tool.RecruitXpert.Security.Config.AuthRequest;
@@ -12,13 +13,18 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins =" https://recruiterexperttest.netlify.app")
 public class UserInfoController {
     @Autowired
     private UserInfoService service;
@@ -28,6 +34,8 @@ public class UserInfoController {
 
     @Autowired
     private UserInfoRepository repository;
+
+    PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -49,11 +57,15 @@ public class UserInfoController {
         return ResponseEntity.ok("successfully Logout.");
     }
 
-
+HashMap<String, Integer> map =new HashMap<>();
     @PostMapping("/login")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) throws Exception {
+    public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) throws Exception {
 
         UserInfo user = repository.findByEmail(authRequest.getEmail()).get();
+
+        String email_id = user.getEmail();
+
+        ResponseJWT res = new ResponseJWT();
 
         Authentication authentication = authenticationManager.authenticate
                 (new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
@@ -61,22 +73,29 @@ public class UserInfoController {
         if (authentication.isAuthenticated()) {
             // for each successful login setting count 0;
             user.setPasswordCount(0);
-            return jwtService.generateToken(authRequest.getEmail());
+            String jwtToken=jwtService.generateToken(authRequest.getEmail());
+            res.setJwt_token(jwtToken);
+            res.setEmail_id(email_id);
+            return new ResponseEntity<>(res,HttpStatus.OK);
         }
 
         if (user.isAccountBlock())
             throw new RuntimeException("Oops! you're account is blocked! reach-out to Admin");
 
-        if (user.getPasswordCount() > 3) {
+        if(user.getPasswordCount() > 3){
             user.setAccountBlock(true);
             throw new RuntimeException("You've already done 3 wrong attempts, now " +
                     "kindly reach-out to admin for further actions.");
-        } else {
+        }
+
+        else {
             int count = user.getPasswordCount();
             user.setPasswordCount(count + 1);
             throw new UsernameNotFoundException("invalid user request !");
         }
     }
+
+
 
 // TESTING purpose
 

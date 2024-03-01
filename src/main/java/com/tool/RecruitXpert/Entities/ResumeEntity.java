@@ -19,7 +19,7 @@ public class ResumeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int resumeId;
+    Integer resumeId;
 
     @CreationTimestamp
     Date createdDate;

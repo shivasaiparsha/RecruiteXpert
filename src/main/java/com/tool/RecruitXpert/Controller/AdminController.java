@@ -33,6 +33,7 @@ import static com.tool.RecruitXpert.ResumeUtility.ResumeUtilities.getMediaType;
 
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin(origins =" https://recruiterexperttest.netlify.app")
 public class AdminController {
 
     @Autowired

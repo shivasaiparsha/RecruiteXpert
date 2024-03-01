@@ -1,4 +1,5 @@
-package com.tool.RecruitXpert.Security.Config;
+package com.tool.RecruitXpert.DTO.SignUp;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -6,8 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+public class ResponseJWT {
 
-public class AuthRequest {
-    private String email;
-    private String password;
+    private String email_id;
+    private String jwt_token;
+
 }

@@ -31,7 +31,6 @@ public class Recruiter {
 
     String lastname;
 
-    @Column(unique = true, nullable = false)
     String organisation;
 
     @Column(unique = true, nullable = false)

@@ -35,7 +35,6 @@ public class ResumeController {
                                                @RequestParam("userid") int userid) throws IOException {
         try {
             String uploadResume = resumeService.saveResumeToDb(file, userid);
-//            return ResponseEntity.status(HttpStatus.OK).body(uploadResume);
             return ResponseEntity.ok().body("{\"message\": \"" + uploadResume + "\"}");
         }
         catch (IOException e) {
@@ -73,7 +72,7 @@ public class ResumeController {
     }
 
     //Versioning : update this logic to above endpoints
-    @GetMapping("/viewAllResume/{id}")
+    @GetMapping("/getAllResumes/{id}")
     public ResponseEntity<List<ResponseForResumeName>> showResume(@PathVariable("id") int userId) throws Exception{
         try {
             List<ResponseForResumeName> list =  resumeService.showResume(userId);
@@ -84,10 +83,10 @@ public class ResumeController {
     }
 
     // delete resume by resume id
-    @DeleteMapping("deleteResumeById/{resumeId}")
-    public ResponseEntity<String> deleteResume(@PathVariable Integer resumeid) {
+    @DeleteMapping("/deleteResumeById/{resumeId}")
+    public ResponseEntity<String> deleteResume(@PathVariable Integer resumeId) {
         try {
-            resumeService.deleteResumeByResumeId(resumeid);
+            resumeService.deleteResumeByResumeId(resumeId);
         } catch (Exception e) {
             log.error("resumeId not found");
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -20,6 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/recruiter")
 @Slf4j
+@CrossOrigin(origins =" https://recruiterexperttest.netlify.app")
+
 public class RecruiterController {
 
     @Autowired

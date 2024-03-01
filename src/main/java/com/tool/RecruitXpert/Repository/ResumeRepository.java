@@ -22,6 +22,7 @@ public interface ResumeRepository extends JpaRepository<ResumeEntity, Integer> {
 
     @Transactional
     @Modifying
-    @Query(value = "delete from image_data where userid=:userid", nativeQuery = true)
+    @Query(value = "delete from resume where userid=:userid", nativeQuery = true)
     void deleteByUserId(@Param("userid") Integer userid);
+
 }
