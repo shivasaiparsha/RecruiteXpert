@@ -1,17 +1,25 @@
 package com.tool.RecruitXpert.Controller;
 
 
+import com.drew.metadata.Metadata;
 import com.tool.RecruitXpert.DTO.RecruiterDto.responseDto.ResponseForResumeName;
 import com.tool.RecruitXpert.ResumeUtility.ResumeUtilities;
 import com.tool.RecruitXpert.Service.ResumeService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.pdfbox.io.RandomAccess;
+import org.apache.pdfbox.io.RandomAccessRead;
+import org.apache.pdfbox.pdfparser.PDFParser;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.sax.BodyContentHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,6 +112,19 @@ public class ResumeController {
          catch (Exception e){
              return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
          }
+    }
+
+    @PostMapping("/parseResume")
+    public String  parseResume(@RequestParam("file")  MultipartFile file ) throws IOException {
+
+
+        BodyContentHandler contentHandler = new BodyContentHandler();
+        File tempFile = File.createTempFile("uploaded", ".pdf"); // Create a temporary file
+        PDDocument document = PDDocument.load(file.getInputStream());
+        PDFTextStripper stripper = new PDFTextStripper();
+        String text = stripper.getText(PDDocument.load(tempFile));
+        document.close();
+        return  text;
     }
 
 }

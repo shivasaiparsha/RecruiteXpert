@@ -6,11 +6,13 @@ import com.tool.RecruitXpert.DTO.RecruiterDto.*;
 import com.tool.RecruitXpert.Entities.JobsApplication;
 import com.tool.RecruitXpert.Entities.Recruiter;
 import com.tool.RecruitXpert.Service.RecruiterService;
+import com.tool.RecruitXpert.Service.ResumeATS;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,6 +28,9 @@ public class RecruiterController {
 
     @Autowired
     RecruiterService service;
+
+    @Autowired
+    ResumeATS resumeATS;
 
     @PostMapping("/sign-up")
     public ResponseEntity<?> recruiterSignUp(@RequestBody RecruiterSignUp signUpDto){
@@ -86,6 +91,14 @@ public class RecruiterController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/get-user-score")
+    public ResponseEntity<?> resumePercentage(@RequestParam("jd") MultipartFile jd, @RequestParam("resume") MultipartFile resume){
+
+         String score= resumeATS.getThePercentageOfresumeWithJd(jd, resume);
+
+         return new ResponseEntity<>(score, HttpStatus.OK);
     }
 }
 
